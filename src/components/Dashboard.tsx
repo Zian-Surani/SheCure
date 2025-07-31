@@ -1,6 +1,8 @@
-import { Baby, Calendar, Heart, TrendingUp, Users, Activity } from "lucide-react";
+import { Baby, Calendar, Heart, TrendingUp, Users, Activity, Thermometer, Weight } from "lucide-react";
 import StatsCard from "@/components/StatsCard";
 import PatientCard from "@/components/PatientCard";
+import PatientDetailCard from "@/components/PatientDetailCard";
+import VaccinationSchedule from "@/components/VaccinationSchedule";
 
 const Dashboard = () => {
   const stats = [
@@ -36,33 +38,129 @@ const Dashboard = () => {
 
   const recentPatients = [
     {
-      name: "Sarah Johnson",
+      name: "Priya Sharma",
       age: 28,
-      condition: "Prenatal Care",
+      condition: "Prenatal Care - 32 weeks",
       lastVisit: "2024-01-28",
-      location: "Downtown Clinic",
-      phone: "+1 (555) 123-4567",
+      location: "Anganwadi Center, Delhi",
+      phone: "+91 98765 43210",
       status: "active" as const
     },
     {
-      name: "Emma Davis",
+      name: "Aadhya Patel",
       age: 5,
-      condition: "Routine Checkup",
+      condition: "Growth Monitoring",
       lastVisit: "2024-01-26",
-      location: "Community Center",
-      phone: "+1 (555) 234-5678",
+      location: "Community Health Center",
+      phone: "+91 87654 32109",
       status: "active" as const
     },
     {
-      name: "Maria Rodriguez",
+      name: "Kavya Reddy",
       age: 32,
-      condition: "Postpartum Care",
+      condition: "Postpartum Care - 6 weeks",
       lastVisit: "2024-01-25",
-      location: "Mobile Unit",
-      phone: "+1 (555) 345-6789",
+      location: "Mobile Health Unit",
+      phone: "+91 76543 21098",
       status: "critical" as const
+    },
+    {
+      name: "Ananya Singh",
+      age: 3,
+      condition: "Vaccination Schedule",
+      lastVisit: "2024-01-24",
+      location: "Primary Health Center",
+      phone: "+91 65432 10987",
+      status: "active" as const
+    },
+    {
+      name: "Meera Gupta",
+      age: 25,
+      condition: "Maternal Health Checkup",
+      lastVisit: "2024-01-23",
+      location: "District Hospital",
+      phone: "+91 54321 09876",
+      status: "active" as const
     }
   ];
+
+  const detailedPatient = {
+    name: "Priya Sharma",
+    age: 28,
+    id: "PID-2024-001",
+    condition: "Prenatal Care - 32 weeks",
+    lastVisit: "2024-01-28",
+    nextAppointment: "2024-02-05",
+    location: "Anganwadi Center, Delhi",
+    healthMetrics: [
+      {
+        label: "Blood Pressure",
+        value: "120/80",
+        unit: "mmHg",
+        status: "normal" as const,
+        icon: Heart
+      },
+      {
+        label: "Weight",
+        value: "68",
+        unit: "kg",
+        status: "normal" as const,
+        icon: Weight
+      },
+      {
+        label: "Temperature",
+        value: "98.6",
+        unit: "°F",
+        status: "normal" as const,
+        icon: Thermometer
+      },
+      {
+        label: "Heart Rate",
+        value: "72",
+        unit: "bpm",
+        status: "normal" as const,
+        icon: Activity
+      }
+    ],
+    notes: "Patient shows excellent progress. Baby's growth is normal. Continue with current prenatal vitamins and schedule ultrasound for next visit."
+  };
+
+  const vaccinationData = {
+    patientName: "Aadhya Patel",
+    age: 5,
+    vaccinations: [
+      {
+        vaccine: "BCG",
+        date: "2019-03-15",
+        nextDue: "Completed",
+        status: "completed" as const
+      },
+      {
+        vaccine: "DPT (1st dose)",
+        date: "2019-05-20",
+        nextDue: "Completed",
+        status: "completed" as const
+      },
+      {
+        vaccine: "DPT (2nd dose)",
+        date: "2019-07-25",
+        nextDue: "Completed",
+        status: "completed" as const
+      },
+      {
+        vaccine: "MMR",
+        date: "2020-03-10",
+        nextDue: "Completed",
+        status: "completed" as const
+      },
+      {
+        vaccine: "Hepatitis B",
+        date: "2024-01-15",
+        nextDue: "2024-07-15",
+        status: "due" as const
+      }
+    ]
+  };
 
   return (
     <div className="space-y-8">
@@ -140,6 +238,12 @@ const Dashboard = () => {
             </div>
           </div>
         </div>
+      </div>
+
+      {/* Enhanced Patient Details */}
+      <div className="grid lg:grid-cols-2 gap-8">
+        <PatientDetailCard {...detailedPatient} />
+        <VaccinationSchedule {...vaccinationData} />
       </div>
     </div>
   );
