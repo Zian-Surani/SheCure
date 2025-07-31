@@ -17,16 +17,16 @@ const Header = () => {
           </div>
           
           <nav className="hidden md:flex items-center space-x-6">
-            <a href="#dashboard" className="text-foreground hover:text-primary transition-colors">
+            <a href="/dashboard" className="text-foreground hover:text-primary transition-colors">
               Dashboard
             </a>
-            <a href="#patients" className="text-foreground hover:text-primary transition-colors">
+            <a href="/patients" className="text-foreground hover:text-primary transition-colors">
               Patients
             </a>
-            <a href="#appointments" className="text-foreground hover:text-primary transition-colors">
+            <a href="/appointments" className="text-foreground hover:text-primary transition-colors">
               Appointments
             </a>
-            <a href="#reports" className="text-foreground hover:text-primary transition-colors">
+            <a href="/reports" className="text-foreground hover:text-primary transition-colors">
               Reports
             </a>
           </nav>
