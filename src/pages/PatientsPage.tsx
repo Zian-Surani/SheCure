@@ -87,7 +87,21 @@ const PatientsPage = () => {
         lastVisit: new Date(patient.created_at).toISOString().split('T')[0]
       }));
       
-      setPatients(formattedData);
+      // Use sample data if database is empty
+      const displayPatients = formattedData.length > 0 ? formattedData : staticDetailedPatients.map((p, i) => ({
+        id: `sample-${i}`,
+        name: p.name,
+        age: p.age,
+        condition: p.condition,
+        phone: p.phone,
+        address: `Address for ${p.name}`,
+        location: p.location,
+        status: p.status,
+        created_at: new Date().toISOString(),
+        lastVisit: p.lastVisit
+      }));
+      
+      setPatients(displayPatients);
     } catch (error: any) {
       toast({
         title: "Error fetching patients",
@@ -280,11 +294,11 @@ const PatientsPage = () => {
           <div className="flex space-x-3">
             <Button variant="soft" onClick={exportData}>
               <Download className="h-4 w-4" />
-              Export Data
+              {t('common.export')}
             </Button>
             <Button variant="health" onClick={() => setShowAddDialog(true)}>
               <Plus className="h-4 w-4" />
-              Add Patient
+              {t('patients.addPatient')}
             </Button>
           </div>
         </div>
@@ -294,7 +308,7 @@ const PatientsPage = () => {
           <div className="relative flex-1">
             <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
             <Input
-              placeholder="Search patients by name..."
+              placeholder={t('patients.searchPlaceholder')}
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
               className="pl-10"
@@ -306,25 +320,25 @@ const PatientsPage = () => {
               size="sm"
               onClick={() => setSelectedFilter("all")}
             >
-              All Patients
+              {t('patients.allPatients')}
             </Button>
             <Button
               variant={selectedFilter === "active" ? "health" : "outline"}
               size="sm"
               onClick={() => setSelectedFilter("active")}
             >
-              Active
+              {t('patients.active')}
             </Button>
             <Button
               variant={selectedFilter === "critical" ? "health" : "outline"}
               size="sm"
               onClick={() => setSelectedFilter("critical")}
             >
-              Critical
+              {t('patients.critical')}
             </Button>
             <Button variant="outline" size="sm">
               <Filter className="h-4 w-4" />
-              More Filters
+              {t('patients.moreFilters')}
             </Button>
           </div>
         </div>

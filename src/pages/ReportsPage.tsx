@@ -242,11 +242,11 @@ const ReportsPage = () => {
           <div className="flex space-x-3">
             <Button variant="soft" onClick={scheduleReport} disabled={loading}>
               {loading ? <Loader2 className="h-4 w-4 animate-spin" /> : <Calendar className="h-4 w-4" />}
-              Schedule Report
+              {t('common.scheduleReport')}
             </Button>
             <Button variant="health" onClick={generateReport} disabled={loading}>
               {loading ? <Loader2 className="h-4 w-4 animate-spin" /> : <FileText className="h-4 w-4" />}
-              Generate Report
+              {t('common.generateReport')}
             </Button>
           </div>
         </div>

@@ -137,11 +137,11 @@ const AppointmentsPage = () => {
           <div className="flex space-x-3">
             <Button variant="soft">
               <Calendar className="h-4 w-4" />
-              Calendar View
+              {t('common.calendarView')}
             </Button>
             <Button variant="health" onClick={() => setShowNewAppointment(true)}>
               <Plus className="h-4 w-4" />
-              New Appointment
+              {t('common.newAppointment')}
             </Button>
           </div>
         </div>
@@ -161,27 +161,27 @@ const AppointmentsPage = () => {
                 size="sm"
                 onClick={() => setViewMode("day")}
               >
-                Day
+                {t('appointments.day')}
               </Button>
               <Button
                 variant={viewMode === "week" ? "health" : "outline"}
                 size="sm"
                 onClick={() => setViewMode("week")}
               >
-                Week
+                {t('appointments.week')}
               </Button>
               <Button
                 variant={viewMode === "month" ? "health" : "outline"}
                 size="sm"
                 onClick={() => setViewMode("month")}
               >
-                Month
+                {t('appointments.month')}
               </Button>
             </div>
           </div>
           <Button variant="outline" size="sm">
             <Filter className="h-4 w-4" />
-            Filter by Status
+            {t('appointments.filterByStatus')}
           </Button>
         </div>
 
@@ -189,7 +189,7 @@ const AppointmentsPage = () => {
           {/* Today's Appointments */}
           <div className="lg:col-span-2">
             <h3 className="text-xl font-semibold text-foreground mb-4">
-              Today's Schedule - {new Date(selectedDate).toLocaleDateString('en-IN', { 
+              {t('appointments.todaySchedule')} - {new Date(selectedDate).toLocaleDateString('en-IN', {
                 weekday: 'long', 
                 year: 'numeric', 
                 month: 'long', 
@@ -247,7 +247,7 @@ const AppointmentsPage = () => {
           {/* Upcoming Appointments Sidebar */}
           <div className="space-y-6">
             <div>
-              <h3 className="text-xl font-semibold text-foreground mb-4">Upcoming This Week</h3>
+              <h3 className="text-xl font-semibold text-foreground mb-4">{t('appointments.upcomingWeek')}</h3>
               <div className="space-y-3">
                 {upcomingAppointments.map((appointment, index) => (
                   <Card key={index} className="p-4 bg-gradient-card">

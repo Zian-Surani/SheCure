@@ -275,7 +275,7 @@ const Dashboard = () => {
           className="animate-pulse bg-destructive hover:bg-destructive/90 shadow-lg"
         >
           <AlertTriangle className="h-5 w-5 mr-2" />
-          Emergency Alert
+          {t('common.emergencyAlert')}
         </Button>
       </div>
 
@@ -385,23 +385,23 @@ const Dashboard = () => {
           <Card className="p-6 bg-gradient-to-r from-destructive/10 to-health-warning/10 border-destructive/20">
             <h4 className="font-semibold text-foreground mb-4 flex items-center">
               <AlertTriangle className="h-5 w-5 mr-2 text-destructive" />
-              Critical Patients Alert
+              {t('critical.title')}
             </h4>
             <div className="space-y-3">
               <div className="flex items-center justify-between p-3 bg-background rounded-lg border border-destructive/20">
                 <div>
                   <p className="font-medium text-foreground">Kavya Reddy</p>
-                  <p className="text-sm text-muted-foreground">Postpartum hypertension</p>
+                  <p className="text-sm text-muted-foreground">{t('critical.postpartumHypertension')}</p>
                 </div>
                 <Button variant="destructive" size="sm" onClick={handleEmergencyAlert}>
                   <Phone className="h-4 w-4 mr-1" />
-                  Call
+                  {t('common.call')}
                 </Button>
               </div>
               <div className="flex items-center justify-between p-3 bg-background rounded-lg border border-health-warning/30">
                 <div>
                   <p className="font-medium text-foreground">Priya Sharma</p>
-                  <p className="text-sm text-muted-foreground">High-risk pregnancy monitoring</p>
+                  <p className="text-sm text-muted-foreground">{t('critical.highRiskPregnancy')}</p>
                 </div>
                 <Button 
                   variant="outline" 
@@ -422,7 +422,7 @@ const Dashboard = () => {
                     setShowPatientDetails(true);
                   }}
                 >
-                  Monitor
+                  {t('common.monitor')}
                 </Button>
               </div>
             </div>

@@ -33,7 +33,7 @@ const Header = () => {
     <header className="bg-gradient-soft border-b border-border">
       <div className="container mx-auto px-4 py-4">
         <div className="flex items-center justify-between">
-            <div className="flex items-center space-x-3 cursor-pointer" onClick={() => navigate('/')}>
+            <div className="flex items-center space-x-3 cursor-pointer" onClick={() => user ? navigate('/dashboard') : navigate('/auth')}>
             <img 
               src="/lovable-uploads/25ad9f45-77ed-4f46-8839-20b7edc24d97.png" 
               alt="SheCure Logo" 
