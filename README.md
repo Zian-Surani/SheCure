@@ -1,73 +1,112 @@
-# Welcome to your Lovable project
 
-## Project info
 
-**URL**: https://lovable.dev/projects/5b202f92-e399-4b48-827b-ec43e1cd199c
+# 🛡️ SheCure
 
-## How can I edit this code?
+**SheCure** is a safety-first mobile and web-based application designed to empower and protect women and vulnerable individuals by providing instant support during emergencies, smart tracking, alert systems, and community engagement. Built with a mission to make personal safety accessible and intelligent, SheCure integrates real-time location tracking, emergency SMS, and a community support network into one seamless platform.
 
-There are several ways of editing your application.
+---
 
-**Use Lovable**
+## 🚀 Features
 
-Simply visit the [Lovable Project](https://lovable.dev/projects/5b202f92-e399-4b48-827b-ec43e1cd199c) and start prompting.
+* 📍 **Real-Time Location Tracking**
+  Allows users to share their live location with trusted contacts during distress.
 
-Changes made via Lovable will be committed automatically to this repo.
+* 🆘 **One-Tap Emergency Alert**
+  Sends SOS messages and location to pre-set emergency contacts via SMS and other channels.
 
-**Use your preferred IDE**
+* 👥 **Community Engagement**
+  Connects users to nearby volunteers and safety networks for quick help.
 
-If you want to work locally using your own IDE, you can clone this repo and push changes. Pushed changes will also be reflected in Lovable.
+* 🧠 **AI-Based Threat Detection (Planned)**
+  Integrates AI/ML models to detect dangerous areas using public data sources.
 
-The only requirement is having Node.js & npm installed - [install with nvm](https://github.com/nvm-sh/nvm#installing-and-updating)
+* 🔒 **Secure User Authentication**
+  Firebase Authentication ensures data security and privacy.
 
-Follow these steps:
+* 🌐 **Responsive Web App + Mobile App**
+  Accessible on various devices, ensuring maximum reach and usability.
 
-```sh
-# Step 1: Clone the repository using the project's Git URL.
-git clone <YOUR_GIT_URL>
+---
 
-# Step 2: Navigate to the project directory.
-cd <YOUR_PROJECT_NAME>
+## 🧰 Tech Stack
 
-# Step 3: Install the necessary dependencies.
-npm i
+| Layer           | Technologies Used                         |
+| --------------- | ----------------------------------------- |
+| Frontend        | HTML, CSS, JavaScript, Bootstrap          |
+| Backend         | Firebase Realtime Database, Firebase Auth |
+| Communication   | Twilio API (for SMS alerts)               |
+| Map Services    | Google Maps API                           |
+| Hosting         | Firebase Hosting                          |
+| Version Control | Git + GitHub                              |
 
-# Step 4: Start the development server with auto-reloading and an instant preview.
-npm run dev
+---
+
+## 📦 Setup Instructions
+
+### 1. Clone the Repository
+
+```bash
+git clone https://github.com/Zian-Surani/SheCure.git
+cd SheCure
 ```
 
-**Edit a file directly in GitHub**
+### 2. Set Up Firebase
 
-- Navigate to the desired file(s).
-- Click the "Edit" button (pencil icon) at the top right of the file view.
-- Make your changes and commit the changes.
+* Create a Firebase project [here](https://console.firebase.google.com/).
+* Enable Authentication (Email/Password).
+* Set up Realtime Database & Hosting.
+* Replace the Firebase config in `index.html` with your project’s config.
 
-**Use GitHub Codespaces**
+### 3. Install Dependencies
 
-- Navigate to the main page of your repository.
-- Click on the "Code" button (green button) near the top right.
-- Select the "Codespaces" tab.
-- Click on "New codespace" to launch a new Codespace environment.
-- Edit files directly within the Codespace and commit and push your changes once you're done.
+(No build tools required — it's a static web project, but ensure Firebase CLI is installed)
 
-## What technologies are used for this project?
+```bash
+npm install -g firebase-tools
+firebase login
+firebase init
+```
 
-This project is built with:
+### 4. Run the Project
 
-- Vite
-- TypeScript
-- React
-- shadcn-ui
-- Tailwind CSS
+```bash
+firebase serve
+```
 
-## How can I deploy this project?
+Open `http://localhost:5000` in your browser.
 
-Simply open [Lovable](https://lovable.dev/projects/5b202f92-e399-4b48-827b-ec43e1cd199c) and click on Share -> Publish.
+---
 
-## Can I connect a custom domain to my Lovable project?
+## 📍 Future Enhancements
 
-Yes, you can!
+* Add **voice-based activation** for emergencies.
+* Enable **AI-based threat zone detection** from local crime reports.
+* Build a **mobile app version** using Flutter or React Native.
+* Integrate **blockchain-based evidence locking**.
+* Support for **multi-language UI** for wider accessibility.
 
-To connect a domain, navigate to Project > Settings > Domains and click Connect Domain.
+---
 
-Read more here: [Setting up a custom domain](https://docs.lovable.dev/tips-tricks/custom-domain#step-by-step-guide)
+## 🙋 Contributing
+
+We welcome contributions!
+
+* Fork the repo
+* Create a new branch: `git checkout -b feature-name`
+* Commit your changes
+* Push and create a PR
+
+---
+
+## 📄 License
+
+This project is licensed under the [MIT License](LICENSE).
+
+---
+
+## 📬 Contact
+
+**Zian Rajeshkumar Surani**
+[LinkedIn](https://www.linkedin.com/in/zian-s-610243252) | [ziansurani1@gmail.com](mailto:ziansurani1@gmail.com)
+
+
