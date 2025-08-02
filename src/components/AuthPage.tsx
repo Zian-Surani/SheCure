@@ -64,6 +64,14 @@ const AuthPage = () => {
           title: "Account created successfully",
           description: "Please check your email to verify your account.",
         });
+        
+        // Redirect to login after signup
+        setTimeout(() => {
+          setIsLogin(true);
+          setEmail("");
+          setPassword("");
+          setFullName("");
+        }, 2000);
       }
     } catch (error: any) {
       toast({
@@ -84,7 +92,8 @@ const AuthPage = () => {
             <img 
               src="/lovable-uploads/ca27b8da-710e-4c79-b1fa-81e7f6ae0e06.png" 
               alt="SheCure Logo" 
-              className="h-16 w-auto"
+              className="h-16 w-auto cursor-pointer hover:scale-105 transition-transform duration-300"
+              onClick={() => navigate("/")}
             />
           </div>
           <CardTitle className="text-2xl font-bold text-foreground">

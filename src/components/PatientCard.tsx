@@ -13,9 +13,10 @@ interface PatientCardProps {
   phone: string;
   status: "active" | "inactive" | "critical";
   onSchedule?: (patientId: string, patientName: string) => void;
+  onViewDetails?: (patient: any) => void;
 }
 
-const PatientCard = ({ id, name, age, condition, lastVisit, location, phone, status, onSchedule }: PatientCardProps) => {
+const PatientCard = ({ id, name, age, condition, lastVisit, location, phone, status, onSchedule, onViewDetails }: PatientCardProps) => {
   const statusColors = {
     active: "bg-health-success text-white",
     inactive: "bg-muted text-muted-foreground",
@@ -63,7 +64,12 @@ const PatientCard = ({ id, name, age, condition, lastVisit, location, phone, sta
       </div>
 
       <div className="flex space-x-2">
-        <Button variant="health" size="sm" className="flex-1">
+        <Button 
+          variant="health" 
+          size="sm" 
+          className="flex-1"
+          onClick={() => onViewDetails?.({ id, name, age, condition, lastVisit, location, phone, status })}
+        >
           View Details
         </Button>
         <Button 

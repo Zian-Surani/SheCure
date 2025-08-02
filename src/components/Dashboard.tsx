@@ -1,88 +1,115 @@
+import { useState, useEffect } from "react";
 import { Baby, Calendar, Heart, TrendingUp, Users, Activity, Thermometer, Weight } from "lucide-react";
 import StatsCard from "@/components/StatsCard";
 import PatientCard from "@/components/PatientCard";
 import PatientDetailCard from "@/components/PatientDetailCard";
 import VaccinationSchedule from "@/components/VaccinationSchedule";
+import { supabase } from "@/integrations/supabase/client";
+import { useToast } from "@/hooks/use-toast";
+import { Card } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
 
 const Dashboard = () => {
-  const stats = [
+  const [patients, setPatients] = useState<any[]>([]);
+  const [selectedPatient, setSelectedPatient] = useState<any>(null);
+  const [stats, setStats] = useState([
     {
       title: "Total Patients",
-      value: "2,547",
+      value: "0",
       change: "+12% from last month",
       icon: Users,
       variant: "default" as const
     },
     {
       title: "Healthy Pregnancies",
-      value: "324",
+      value: "0",
       change: "+8% this quarter",
       icon: Heart,
       variant: "success" as const
     },
     {
       title: "Children Vaccinated",
-      value: "1,832",
+      value: "0",
       change: "+15% from target",
       icon: Baby,
       variant: "success" as const
     },
     {
       title: "Pending Appointments",
-      value: "89",
+      value: "0",
       change: "Next 7 days",
       icon: Calendar,
       variant: "warning" as const
     }
-  ];
+  ]);
+  const { toast } = useToast();
 
-  const recentPatients = [
-    {
-      name: "Priya Sharma",
-      age: 28,
-      condition: "Prenatal Care - 32 weeks",
-      lastVisit: "2024-01-28",
-      location: "Anganwadi Center, Delhi",
-      phone: "+91 98765 43210",
-      status: "active" as const
-    },
-    {
-      name: "Aadhya Patel",
-      age: 5,
-      condition: "Growth Monitoring",
-      lastVisit: "2024-01-26",
-      location: "Community Health Center",
-      phone: "+91 87654 32109",
-      status: "active" as const
-    },
-    {
-      name: "Kavya Reddy",
-      age: 32,
-      condition: "Postpartum Care - 6 weeks",
-      lastVisit: "2024-01-25",
-      location: "Mobile Health Unit",
-      phone: "+91 76543 21098",
-      status: "critical" as const
-    },
-    {
-      name: "Ananya Singh",
-      age: 3,
-      condition: "Vaccination Schedule",
-      lastVisit: "2024-01-24",
-      location: "Primary Health Center",
-      phone: "+91 65432 10987",
-      status: "active" as const
-    },
-    {
-      name: "Meera Gupta",
-      age: 25,
-      condition: "Maternal Health Checkup",
-      lastVisit: "2024-01-23",
-      location: "District Hospital",
-      phone: "+91 54321 09876",
-      status: "active" as const
+  useEffect(() => {
+    fetchDashboardData();
+  }, []);
+
+  const fetchDashboardData = async () => {
+    try {
+      // Fetch patients
+      const { data: patientsData, error: patientsError } = await supabase
+        .from("patients")
+        .select("*")
+        .order("created_at", { ascending: false })
+        .limit(6);
+
+      if (patientsError) throw patientsError;
+
+      setPatients(patientsData || []);
+
+      // Update stats with real data
+      const totalPatients = patientsData?.length || 0;
+      const pregnancies = patientsData?.filter(p => p.condition?.includes('Prenatal')).length || 0;
+      const children = patientsData?.filter(p => p.age < 18).length || 0;
+
+      setStats([
+        {
+          title: "Total Patients",
+          value: totalPatients.toString(),
+          change: "+12% from last month",
+          icon: Users,
+          variant: "default" as const
+        },
+        {
+          title: "Healthy Pregnancies",
+          value: pregnancies.toString(),
+          change: "+8% this quarter",
+          icon: Heart,
+          variant: "success" as const
+        },
+        {
+          title: "Children Monitored",
+          value: children.toString(),
+          change: "+15% from target",
+          icon: Baby,
+          variant: "success" as const
+        },
+        {
+          title: "Active Cases",
+          value: patientsData?.filter(p => p.status === 'active').length.toString() || "0",
+          change: "This week",
+          icon: Calendar,
+          variant: "warning" as const
+        }
+      ]);
+
+    } catch (error: any) {
+      toast({
+        title: "Error fetching dashboard data",
+        description: error.message,
+        variant: "destructive",
+      });
     }
-  ];
+  };
+
+  const handlePatientClick = (patient: any) => {
+    setSelectedPatient(patient);
+  };
+
 
   const detailedPatient = {
     name: "Priya Sharma",
@@ -181,9 +208,33 @@ const Dashboard = () => {
         <div className="lg:col-span-2">
           <h3 className="text-xl font-semibold text-foreground mb-4">Recent Patients</h3>
           <div className="grid gap-4">
-            {recentPatients.map((patient, index) => (
-              <PatientCard key={index} {...patient} />
-            ))}
+            {patients.length > 0 ? (
+              patients.map((patient, index) => (
+                <Card 
+                  key={index} 
+                  className="p-4 hover:shadow-card transition-all duration-300 cursor-pointer bg-gradient-card"
+                  onClick={() => handlePatientClick(patient)}
+                >
+                  <div className="flex items-center justify-between">
+                    <div>
+                      <h4 className="font-semibold text-foreground">{patient.name}</h4>
+                      <p className="text-sm text-muted-foreground">Age: {patient.age}</p>
+                    </div>
+                    <span className={`px-2 py-1 rounded-full text-xs font-medium ${
+                      patient.status === 'active' ? 'bg-health-success text-white' :
+                      patient.status === 'critical' ? 'bg-destructive text-destructive-foreground' :
+                      'bg-muted text-muted-foreground'
+                    }`}>
+                      {patient.status}
+                    </span>
+                  </div>
+                </Card>
+              ))
+            ) : (
+              <Card className="p-6 text-center">
+                <p className="text-muted-foreground">No patients found. Add some patients to see them here.</p>
+              </Card>
+            )}
           </div>
         </div>
 
@@ -240,11 +291,49 @@ const Dashboard = () => {
         </div>
       </div>
 
-      {/* Enhanced Patient Details */}
-      <div className="grid lg:grid-cols-2 gap-8">
-        <PatientDetailCard {...detailedPatient} />
-        <VaccinationSchedule {...vaccinationData} />
-      </div>
+      {/* Selected Patient Details */}
+      {selectedPatient && (
+        <div className="mt-8">
+          <h3 className="text-xl font-semibold text-foreground mb-4">Patient Details</h3>
+          <Card className="p-6 bg-gradient-card">
+            <div className="grid md:grid-cols-2 gap-6">
+              <div>
+                <h4 className="text-lg font-semibold text-foreground mb-4">{selectedPatient.name}</h4>
+                <div className="space-y-2">
+                  <p><span className="font-medium">Age:</span> {selectedPatient.age}</p>
+                  <p><span className="font-medium">Condition:</span> {selectedPatient.condition || 'Not specified'}</p>
+                  <p><span className="font-medium">Phone:</span> {selectedPatient.phone}</p>
+                  <p><span className="font-medium">Address:</span> {selectedPatient.address}</p>
+                  <p><span className="font-medium">Location:</span> {selectedPatient.location}</p>
+                  <p><span className="font-medium">Status:</span> 
+                    <span className={`ml-1 px-2 py-1 rounded-full text-xs font-medium ${
+                      selectedPatient.status === 'active' ? 'bg-health-success text-white' :
+                      selectedPatient.status === 'critical' ? 'bg-destructive text-destructive-foreground' :
+                      'bg-muted text-muted-foreground'
+                    }`}>
+                      {selectedPatient.status}
+                    </span>
+                  </p>
+                </div>
+              </div>
+              <div>
+                <h5 className="font-semibold text-foreground mb-2">Quick Actions</h5>
+                <div className="space-y-2">
+                  <Button variant="health" size="sm" className="w-full">
+                    Schedule Appointment
+                  </Button>
+                  <Button variant="soft" size="sm" className="w-full">
+                    View Medical History
+                  </Button>
+                  <Button variant="outline" size="sm" className="w-full">
+                    Update Records
+                  </Button>
+                </div>
+              </div>
+            </div>
+          </Card>
+        </div>
+      )}
     </div>
   );
 };

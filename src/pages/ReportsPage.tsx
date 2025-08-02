@@ -1,12 +1,77 @@
 import { useState } from "react";
-import { FileText, Download, TrendingUp, Calendar, BarChart3, PieChart, Filter } from "lucide-react";
+import { FileText, Download, TrendingUp, Calendar, BarChart3, PieChart, Filter, Loader2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import Header from "@/components/Header";
+import { useToast } from "@/hooks/use-toast";
 
 const ReportsPage = () => {
   const [selectedPeriod, setSelectedPeriod] = useState("monthly");
   const [selectedCategory, setSelectedCategory] = useState("all");
+  const [loading, setLoading] = useState(false);
+  const { toast } = useToast();
+
+  const generateReport = async () => {
+    setLoading(true);
+    try {
+      // Simulate report generation
+      await new Promise(resolve => setTimeout(resolve, 2000));
+      
+      toast({
+        title: "Report Generated Successfully",
+        description: "Your health report has been generated and is ready for download.",
+      });
+    } catch (error) {
+      toast({
+        title: "Error generating report",
+        description: "Please try again later.",
+        variant: "destructive",
+      });
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const scheduleReport = async () => {
+    setLoading(true);
+    try {
+      // Simulate scheduling
+      await new Promise(resolve => setTimeout(resolve, 1500));
+      
+      toast({
+        title: "Report Scheduled",
+        description: "Your report has been scheduled for weekly generation.",
+      });
+    } catch (error) {
+      toast({
+        title: "Error scheduling report",
+        description: "Please try again later.",
+        variant: "destructive",
+      });
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const downloadReport = (reportId: string, title: string) => {
+    // Create a simple CSV content for demonstration
+    const csvContent = `Report: ${title}\nGenerated: ${new Date().toLocaleDateString()}\n\nSample Data:\nPatient Name,Age,Status\nPriya Sharma,28,Active\nKavya Reddy,32,Critical\nAadhya Patel,5,Active`;
+    
+    const blob = new Blob([csvContent], { type: 'text/csv' });
+    const url = window.URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `${reportId}-${title.replace(/\s+/g, '-')}.csv`;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    window.URL.revokeObjectURL(url);
+    
+    toast({
+      title: "Download Started",
+      description: `${title} is being downloaded.`,
+    });
+  };
 
   const reportCategories = [
     { id: "all", name: "All Reports", count: 12 },
@@ -170,12 +235,12 @@ const ReportsPage = () => {
             <p className="text-muted-foreground">Generated health analytics and performance reports</p>
           </div>
           <div className="flex space-x-3">
-            <Button variant="soft">
-              <Calendar className="h-4 w-4" />
+            <Button variant="soft" onClick={scheduleReport} disabled={loading}>
+              {loading ? <Loader2 className="h-4 w-4 animate-spin" /> : <Calendar className="h-4 w-4" />}
               Schedule Report
             </Button>
-            <Button variant="health">
-              <FileText className="h-4 w-4" />
+            <Button variant="health" onClick={generateReport} disabled={loading}>
+              {loading ? <Loader2 className="h-4 w-4 animate-spin" /> : <FileText className="h-4 w-4" />}
               Generate Report
             </Button>
           </div>
@@ -253,7 +318,7 @@ const ReportsPage = () => {
                   <p className="text-muted-foreground text-sm">{report.summary}</p>
                 </div>
                 <div className="flex space-x-2 ml-4">
-                  <Button variant="soft" size="sm">
+                  <Button variant="soft" size="sm" onClick={() => downloadReport(report.id, report.title)}>
                     <Download className="h-4 w-4" />
                     Download
                   </Button>

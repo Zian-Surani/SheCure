@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { Search, Filter, Plus, Download, Thermometer, Weight, Heart, Activity } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { Card } from "@/components/ui/card";
 import Header from "@/components/Header";
 import PatientCard from "@/components/PatientCard";
 import PatientDetailCard from "@/components/PatientDetailCard";
@@ -31,7 +32,36 @@ const PatientsPage = () => {
   const [showAddDialog, setShowAddDialog] = useState(false);
   const [showAppointmentDialog, setShowAppointmentDialog] = useState(false);
   const [selectedPatient, setSelectedPatient] = useState<{ id: string; name: string } | null>(null);
+  const [selectedPatientDetails, setSelectedPatientDetails] = useState<any>(null);
   const { toast } = useToast();
+
+  const exportData = () => {
+    const csvContent = [
+      "Name,Age,Condition,Phone,Location,Status,Last Visit",
+      ...filteredPatients.map(patient => 
+        `"${patient.name}",${patient.age},"${patient.condition || 'N/A'}","${patient.phone}","${patient.location}","${patient.status}","${patient.lastVisit}"`
+      )
+    ].join('\n');
+
+    const blob = new Blob([csvContent], { type: 'text/csv' });
+    const url = window.URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `patients-export-${new Date().toISOString().split('T')[0]}.csv`;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    window.URL.revokeObjectURL(url);
+    
+    toast({
+      title: "Export Successful",
+      description: `${filteredPatients.length} patient records exported successfully.`,
+    });
+  };
+
+  const handleViewDetails = (patient: any) => {
+    setSelectedPatientDetails(patient);
+  };
 
   useEffect(() => {
     fetchPatients();
@@ -243,7 +273,7 @@ const PatientsPage = () => {
             <p className="text-muted-foreground">Manage and monitor all patient health records</p>
           </div>
           <div className="flex space-x-3">
-            <Button variant="soft">
+            <Button variant="soft" onClick={exportData}>
               <Download className="h-4 w-4" />
               Export Data
             </Button>
@@ -311,6 +341,7 @@ const PatientsPage = () => {
                       key={index} 
                       {...patient} 
                       onSchedule={handleScheduleAppointment}
+                      onViewDetails={handleViewDetails}
                     />
                   ))
                 ) : (
@@ -326,12 +357,46 @@ const PatientsPage = () => {
               </div>
             </div>
 
-            {/* Detailed Patient Cards */}
+            {/* Selected Patient Details or Priority Cases */}
             <div className="space-y-6">
-              <h3 className="text-xl font-semibold text-foreground">Priority Cases</h3>
-              {detailedPatients.map((patient, index) => (
-                <PatientDetailCard key={index} {...patient} />
-              ))}
+              {selectedPatientDetails ? (
+                <div>
+                  <h3 className="text-xl font-semibold text-foreground mb-4">Patient Details</h3>
+                  <Card className="p-6 bg-gradient-card">
+                    <div className="space-y-4">
+                      <div className="flex items-center justify-between">
+                        <h4 className="text-lg font-semibold text-foreground">{selectedPatientDetails.name}</h4>
+                        <Button variant="outline" size="sm" onClick={() => setSelectedPatientDetails(null)}>
+                          Close
+                        </Button>
+                      </div>
+                      <div className="grid grid-cols-2 gap-4 text-sm">
+                        <div><span className="font-medium">Age:</span> {selectedPatientDetails.age}</div>
+                        <div><span className="font-medium">Status:</span> 
+                          <span className={`ml-1 px-2 py-1 rounded-full text-xs ${
+                            selectedPatientDetails.status === 'active' ? 'bg-health-success text-white' :
+                            selectedPatientDetails.status === 'critical' ? 'bg-destructive text-destructive-foreground' :
+                            'bg-muted text-muted-foreground'
+                          }`}>
+                            {selectedPatientDetails.status}
+                          </span>
+                        </div>
+                        <div><span className="font-medium">Condition:</span> {selectedPatientDetails.condition || 'N/A'}</div>
+                        <div><span className="font-medium">Phone:</span> {selectedPatientDetails.phone}</div>
+                        <div className="col-span-2"><span className="font-medium">Location:</span> {selectedPatientDetails.location}</div>
+                        <div><span className="font-medium">Last Visit:</span> {selectedPatientDetails.lastVisit}</div>
+                      </div>
+                    </div>
+                  </Card>
+                </div>
+              ) : (
+                <div>
+                  <h3 className="text-xl font-semibold text-foreground">Priority Cases</h3>
+                  {detailedPatients.slice(0, 2).map((patient, index) => (
+                    <PatientDetailCard key={index} {...patient} />
+                  ))}
+                </div>
+              )}
             </div>
           </div>
         )}
