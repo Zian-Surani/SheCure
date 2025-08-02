@@ -62,15 +62,15 @@ const Index = () => {
 
   const developers = [
     {
-      name: "Ramya Prabha B",
-      role: "Lead Developer",
-      bio: "Passionate healthcare technology developer with expertise in creating accessible digital solutions for maternal and child health initiatives.",
+      name: t('about.ramya.name'),
+      role: t('about.ramya.role'),
+      bio: t('about.ramya.bio'),
       linkedinUrl: "https://www.linkedin.com/in/ramyaprabhab"
     },
     {
-      name: "Vaishnavi Soni",
-      role: "Frontend Developer",
-      bio: "Experienced in building user-friendly interfaces and implementing responsive designs for healthcare applications.",
+      name: t('about.vaishnavi.name'),
+      role: t('about.vaishnavi.role'),
+      bio: t('about.vaishnavi.bio'),
       linkedinUrl: "https://www.linkedin.com/in/vaishnavi-soni-27b461331"
     }
   ];
@@ -81,10 +81,12 @@ const Index = () => {
       <header className="border-b border-border bg-card shadow-soft sticky top-0 z-50">
         <div className="container mx-auto px-4 py-4">
           <div className="flex items-center justify-between">
-            <div className="flex items-center space-x-2">
-              <div className="bg-gradient-primary p-2 rounded-lg">
-                <Stethoscope className="h-6 w-6 text-white" />
-              </div>
+            <div className="flex items-center space-x-2 cursor-pointer" onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}>
+              <img 
+                src="/lovable-uploads/25ad9f45-77ed-4f46-8839-20b7edc24d97.png" 
+                alt="SheCure Logo" 
+                className="h-8 w-auto"
+              />
               <span className="text-xl font-bold bg-gradient-primary bg-clip-text text-transparent">
                 SheCure
               </span>
@@ -105,7 +107,7 @@ const Index = () => {
       <HeroSection />
 
       {/* Features Section */}
-      <section className="py-20 bg-gradient-soft">
+      <section id="features-section" className="py-20 bg-gradient-soft">
         <div className="container mx-auto px-4">
           <div className="text-center mb-16">
             <h2 className="text-3xl lg:text-4xl font-bold text-foreground mb-4">
@@ -169,10 +171,10 @@ const Index = () => {
             <span className="text-xl font-bold">SheCure</span>
           </div>
           <p className="text-muted mb-4">
-            Empowering women and children through accessible healthcare
+            {t('footer.tagline')}
           </p>
           <p className="text-sm text-muted">
-            © 2025 SheCure. Built with ❤️ for better healthcare.
+            {t('footer.copyright')}
           </p>
         </div>
       </footer>

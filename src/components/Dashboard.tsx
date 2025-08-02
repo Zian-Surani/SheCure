@@ -1,48 +1,29 @@
 import { useState, useEffect } from "react";
-import { Baby, Calendar, Heart, TrendingUp, Users, Activity, Thermometer, Weight } from "lucide-react";
+import { useNavigate } from "react-router-dom";
+import { Baby, Calendar, Heart, TrendingUp, Users, Activity, Thermometer, Weight, X } from "lucide-react";
 import StatsCard from "@/components/StatsCard";
 import PatientCard from "@/components/PatientCard";
 import PatientDetailCard from "@/components/PatientDetailCard";
 import VaccinationSchedule from "@/components/VaccinationSchedule";
+import AddPatientDialog from "@/components/AddPatientDialog";
+import AppointmentDialog from "@/components/AppointmentDialog";
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
+import { useLanguage } from "@/hooks/useLanguage";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 
 const Dashboard = () => {
   const [patients, setPatients] = useState<any[]>([]);
   const [selectedPatient, setSelectedPatient] = useState<any>(null);
-  const [stats, setStats] = useState([
-    {
-      title: "Total Patients",
-      value: "0",
-      change: "+12% from last month",
-      icon: Users,
-      variant: "default" as const
-    },
-    {
-      title: "Healthy Pregnancies",
-      value: "0",
-      change: "+8% this quarter",
-      icon: Heart,
-      variant: "success" as const
-    },
-    {
-      title: "Children Vaccinated",
-      value: "0",
-      change: "+15% from target",
-      icon: Baby,
-      variant: "success" as const
-    },
-    {
-      title: "Pending Appointments",
-      value: "0",
-      change: "Next 7 days",
-      icon: Calendar,
-      variant: "warning" as const
-    }
-  ]);
+  const [showPatientDetails, setShowPatientDetails] = useState(false);
+  const [showAddPatient, setShowAddPatient] = useState(false);
+  const [showAppointment, setShowAppointment] = useState(false);
+  const [stats, setStats] = useState([]);
   const { toast } = useToast();
+  const { t } = useLanguage();
+  const navigate = useNavigate();
 
   useEffect(() => {
     fetchDashboardData();
@@ -68,28 +49,28 @@ const Dashboard = () => {
 
       setStats([
         {
-          title: "Total Patients",
+          title: t('dashboard.totalPatients'),
           value: totalPatients.toString(),
           change: "+12% from last month",
           icon: Users,
           variant: "default" as const
         },
         {
-          title: "Healthy Pregnancies",
+          title: t('dashboard.healthyPregnancies'),
           value: pregnancies.toString(),
           change: "+8% this quarter",
           icon: Heart,
           variant: "success" as const
         },
         {
-          title: "Children Monitored",
+          title: t('dashboard.childrenVaccinated'),
           value: children.toString(),
           change: "+15% from target",
           icon: Baby,
           variant: "success" as const
         },
         {
-          title: "Active Cases",
+          title: t('dashboard.activeCases'),
           value: patientsData?.filter(p => p.status === 'active').length.toString() || "0",
           change: "This week",
           icon: Calendar,
@@ -108,6 +89,19 @@ const Dashboard = () => {
 
   const handlePatientClick = (patient: any) => {
     setSelectedPatient(patient);
+    setShowPatientDetails(true);
+  };
+
+  const handleAddPatient = () => {
+    setShowAddPatient(true);
+  };
+
+  const handleScheduleAppointment = () => {
+    setShowAppointment(true);
+  };
+
+  const handleGenerateReport = () => {
+    navigate("/reports");
   };
 
 
@@ -192,8 +186,8 @@ const Dashboard = () => {
   return (
     <div className="space-y-8">
       <div>
-        <h2 className="text-2xl font-bold text-foreground mb-2">Health Dashboard</h2>
-        <p className="text-muted-foreground">Monitor health records and track patient wellness</p>
+        <h2 className="text-2xl font-bold text-foreground mb-2">{t('dashboard.title')}</h2>
+        <p className="text-muted-foreground">{t('dashboard.subtitle')}</p>
       </div>
 
       {/* Stats Grid */}
@@ -206,7 +200,7 @@ const Dashboard = () => {
       {/* Recent Activity */}
       <div className="grid lg:grid-cols-3 gap-8">
         <div className="lg:col-span-2">
-          <h3 className="text-xl font-semibold text-foreground mb-4">Recent Patients</h3>
+          <h3 className="text-xl font-semibold text-foreground mb-4">{t('dashboard.recentPatients')}</h3>
           <div className="grid gap-4">
             {patients.length > 0 ? (
               patients.map((patient, index) => (
@@ -242,11 +236,11 @@ const Dashboard = () => {
           <div className="bg-gradient-card p-6 rounded-lg shadow-card">
             <h4 className="font-semibold text-foreground mb-4 flex items-center">
               <Activity className="h-5 w-5 mr-2 text-primary" />
-              Health Metrics
+              {t('dashboard.healthMetrics')}
             </h4>
             <div className="space-y-4">
               <div className="flex justify-between items-center">
-                <span className="text-sm text-muted-foreground">Maternal Health</span>
+                <span className="text-sm text-muted-foreground">{t('dashboard.maternalHealth')}</span>
                 <span className="font-semibold text-health-success">92%</span>
               </div>
               <div className="w-full bg-muted rounded-full h-2">
@@ -254,7 +248,7 @@ const Dashboard = () => {
               </div>
               
               <div className="flex justify-between items-center">
-                <span className="text-sm text-muted-foreground">Child Wellness</span>
+                <span className="text-sm text-muted-foreground">{t('dashboard.childWellness')}</span>
                 <span className="font-semibold text-primary">87%</span>
               </div>
               <div className="w-full bg-muted rounded-full h-2">
@@ -262,7 +256,7 @@ const Dashboard = () => {
               </div>
               
               <div className="flex justify-between items-center">
-                <span className="text-sm text-muted-foreground">Vaccination Rate</span>
+                <span className="text-sm text-muted-foreground">{t('dashboard.vaccinationRate')}</span>
                 <span className="font-semibold text-health-success">95%</span>
               </div>
               <div className="w-full bg-muted rounded-full h-2">
@@ -274,28 +268,44 @@ const Dashboard = () => {
           <div className="bg-gradient-card p-6 rounded-lg shadow-card">
             <h4 className="font-semibold text-foreground mb-4 flex items-center">
               <TrendingUp className="h-5 w-5 mr-2 text-primary" />
-              Quick Actions
+              {t('dashboard.quickActions')}
             </h4>
             <div className="space-y-3">
-              <button className="w-full text-left p-3 rounded-lg bg-primary-soft hover:bg-primary-soft/80 transition-colors">
-                <span className="text-sm font-medium text-primary">Add New Patient</span>
+              <button 
+                onClick={handleAddPatient}
+                className="w-full text-left p-3 rounded-lg bg-primary-soft hover:bg-primary-soft/80 transition-colors"
+              >
+                <span className="text-sm font-medium text-primary">{t('dashboard.addNewPatient')}</span>
               </button>
-              <button className="w-full text-left p-3 rounded-lg bg-health-pink hover:bg-health-pink/80 transition-colors">
-                <span className="text-sm font-medium text-primary">Schedule Appointment</span>
+              <button 
+                onClick={handleScheduleAppointment}
+                className="w-full text-left p-3 rounded-lg bg-health-pink hover:bg-health-pink/80 transition-colors"
+              >
+                <span className="text-sm font-medium text-primary">{t('dashboard.scheduleAppointment')}</span>
               </button>
-              <button className="w-full text-left p-3 rounded-lg bg-health-purple hover:bg-health-purple/80 transition-colors">
-                <span className="text-sm font-medium text-primary">Generate Report</span>
+              <button 
+                onClick={handleGenerateReport}
+                className="w-full text-left p-3 rounded-lg bg-health-purple hover:bg-health-purple/80 transition-colors"
+              >
+                <span className="text-sm font-medium text-primary">{t('dashboard.generateReport')}</span>
               </button>
             </div>
           </div>
         </div>
       </div>
 
-      {/* Selected Patient Details */}
-      {selectedPatient && (
-        <div className="mt-8">
-          <h3 className="text-xl font-semibold text-foreground mb-4">Patient Details</h3>
-          <Card className="p-6 bg-gradient-card">
+      {/* Patient Details Dialog */}
+      <Dialog open={showPatientDetails} onOpenChange={setShowPatientDetails}>
+        <DialogContent className="max-w-2xl">
+          <DialogHeader>
+            <DialogTitle className="flex items-center justify-between">
+              {t('dashboard.patientDetails')}
+              <Button variant="ghost" size="sm" onClick={() => setShowPatientDetails(false)}>
+                <X className="h-4 w-4" />
+              </Button>
+            </DialogTitle>
+          </DialogHeader>
+          {selectedPatient && (
             <div className="grid md:grid-cols-2 gap-6">
               <div>
                 <h4 className="text-lg font-semibold text-foreground mb-4">{selectedPatient.name}</h4>
@@ -317,23 +327,39 @@ const Dashboard = () => {
                 </div>
               </div>
               <div>
-                <h5 className="font-semibold text-foreground mb-2">Quick Actions</h5>
+                <h5 className="font-semibold text-foreground mb-2">{t('dashboard.quickActions')}</h5>
                 <div className="space-y-2">
-                  <Button variant="health" size="sm" className="w-full">
-                    Schedule Appointment
+                  <Button variant="health" size="sm" className="w-full" onClick={handleScheduleAppointment}>
+                    {t('dashboard.scheduleAppointment')}
                   </Button>
                   <Button variant="soft" size="sm" className="w-full">
-                    View Medical History
+                    {t('dashboard.viewMedicalHistory')}
                   </Button>
                   <Button variant="outline" size="sm" className="w-full">
-                    Update Records
+                    {t('dashboard.updateRecords')}
                   </Button>
                 </div>
               </div>
             </div>
-          </Card>
-        </div>
-      )}
+          )}
+        </DialogContent>
+      </Dialog>
+
+      {/* Add Patient Dialog */}
+      <AddPatientDialog 
+        open={showAddPatient} 
+        onOpenChange={setShowAddPatient}
+        onPatientAdded={fetchDashboardData}
+      />
+
+      {/* Appointment Dialog */}
+      <AppointmentDialog 
+        open={showAppointment} 
+        onOpenChange={setShowAppointment}
+        patientId={selectedPatient?.id}
+        patientName={selectedPatient?.name || ''}
+        onAppointmentScheduled={fetchDashboardData}
+      />
     </div>
   );
 };

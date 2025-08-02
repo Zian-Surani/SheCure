@@ -3,11 +3,13 @@ import { Button } from "@/components/ui/button";
 import { useAuth } from "@/hooks/useAuth";
 import { useNavigate } from "react-router-dom";
 import { useToast } from "@/hooks/use-toast";
+import { useLanguage } from "@/hooks/useLanguage";
 
 const Header = () => {
   const { user, signOut } = useAuth();
   const navigate = useNavigate();
   const { toast } = useToast();
+  const { t } = useLanguage();
 
   const handleSignOut = async () => {
     try {
@@ -30,9 +32,9 @@ const Header = () => {
     <header className="bg-gradient-soft border-b border-border">
       <div className="container mx-auto px-4 py-4">
         <div className="flex items-center justify-between">
-          <div className="flex items-center space-x-3">
+            <div className="flex items-center space-x-3 cursor-pointer" onClick={() => navigate('/')}>
             <img 
-              src="/lovable-uploads/ca27b8da-710e-4c79-b1fa-81e7f6ae0e06.png" 
+              src="/lovable-uploads/25ad9f45-77ed-4f46-8839-20b7edc24d97.png" 
               alt="SheCure Logo" 
               className="h-12 w-auto"
             />
@@ -44,16 +46,16 @@ const Header = () => {
           
           <nav className="hidden md:flex items-center space-x-6">
             <a href="/dashboard" className="text-foreground hover:text-primary transition-colors">
-              Dashboard
+              {t('nav.dashboard')}
             </a>
             <a href="/patients" className="text-foreground hover:text-primary transition-colors">
-              Patients
+              {t('nav.patients')}
             </a>
             <a href="/appointments" className="text-foreground hover:text-primary transition-colors">
-              Appointments
+              {t('nav.appointments')}
             </a>
             <a href="/reports" className="text-foreground hover:text-primary transition-colors">
-              Reports
+              {t('nav.reports')}
             </a>
           </nav>
 
@@ -61,7 +63,7 @@ const Header = () => {
             {user && (
               <Button variant="soft" size="sm" onClick={handleSignOut}>
                 <LogOut className="h-4 w-4" />
-                Sign Out
+                {t('nav.signOut')}
               </Button>
             )}
             <Button variant="ghost" size="icon" className="md:hidden">
