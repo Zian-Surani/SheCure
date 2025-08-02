@@ -4,6 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 
 interface PatientCardProps {
+  id?: string;
   name: string;
   age: number;
   condition: string;
@@ -11,9 +12,10 @@ interface PatientCardProps {
   location: string;
   phone: string;
   status: "active" | "inactive" | "critical";
+  onSchedule?: (patientId: string, patientName: string) => void;
 }
 
-const PatientCard = ({ name, age, condition, lastVisit, location, phone, status }: PatientCardProps) => {
+const PatientCard = ({ id, name, age, condition, lastVisit, location, phone, status, onSchedule }: PatientCardProps) => {
   const statusColors = {
     active: "bg-health-success text-white",
     inactive: "bg-muted text-muted-foreground",
@@ -64,7 +66,12 @@ const PatientCard = ({ name, age, condition, lastVisit, location, phone, status 
         <Button variant="health" size="sm" className="flex-1">
           View Details
         </Button>
-        <Button variant="soft" size="sm" className="flex-1">
+        <Button 
+          variant="soft" 
+          size="sm" 
+          className="flex-1"
+          onClick={() => id && onSchedule?.(id, name)}
+        >
           Schedule
         </Button>
       </div>

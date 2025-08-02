@@ -1,16 +1,75 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Search, Filter, Plus, Download, Thermometer, Weight, Heart, Activity } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import Header from "@/components/Header";
 import PatientCard from "@/components/PatientCard";
 import PatientDetailCard from "@/components/PatientDetailCard";
+import AddPatientDialog from "@/components/AddPatientDialog";
+import AppointmentDialog from "@/components/AppointmentDialog";
+import { supabase } from "@/integrations/supabase/client";
+import { useToast } from "@/hooks/use-toast";
+import { Loader2 } from "lucide-react";
+
+interface Patient {
+  id: string;
+  name: string;
+  age: number;
+  condition: string | null;
+  phone: string;
+  location: string;
+  status: "active" | "inactive" | "critical";
+  created_at: string;
+  lastVisit: string;
+}
 
 const PatientsPage = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedFilter, setSelectedFilter] = useState("all");
+  const [patients, setPatients] = useState<Patient[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [showAddDialog, setShowAddDialog] = useState(false);
+  const [showAppointmentDialog, setShowAppointmentDialog] = useState(false);
+  const [selectedPatient, setSelectedPatient] = useState<{ id: string; name: string } | null>(null);
+  const { toast } = useToast();
 
-  const patients = [
+  useEffect(() => {
+    fetchPatients();
+  }, []);
+
+  const fetchPatients = async () => {
+    try {
+      const { data, error } = await supabase
+        .from("patients")
+        .select("*")
+        .order("created_at", { ascending: false });
+
+      if (error) throw error;
+      
+      const formattedData = (data || []).map(patient => ({
+        ...patient,
+        status: patient.status as "active" | "inactive" | "critical",
+        lastVisit: new Date(patient.created_at).toISOString().split('T')[0]
+      }));
+      
+      setPatients(formattedData);
+    } catch (error: any) {
+      toast({
+        title: "Error fetching patients",
+        description: error.message,
+        variant: "destructive",
+      });
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleScheduleAppointment = (patientId: string, patientName: string) => {
+    setSelectedPatient({ id: patientId, name: patientName });
+    setShowAppointmentDialog(true);
+  };
+
+  const staticDetailedPatients = [
     {
       name: "Priya Sharma",
       age: 28,
@@ -188,7 +247,7 @@ const PatientsPage = () => {
               <Download className="h-4 w-4" />
               Export Data
             </Button>
-            <Button variant="health">
+            <Button variant="health" onClick={() => setShowAddDialog(true)}>
               <Plus className="h-4 w-4" />
               Add Patient
             </Button>
@@ -235,24 +294,65 @@ const PatientsPage = () => {
           </div>
         </div>
 
-        {/* Patient Grid */}
-        <div className="grid lg:grid-cols-3 gap-8">
-          <div className="lg:col-span-2">
-            <div className="grid gap-4">
-              {filteredPatients.map((patient, index) => (
-                <PatientCard key={index} {...patient} />
+        {/* Loading State */}
+        {loading ? (
+          <div className="flex items-center justify-center py-12">
+            <Loader2 className="h-8 w-8 animate-spin text-primary" />
+            <span className="ml-2 text-muted-foreground">Loading patients...</span>
+          </div>
+        ) : (
+          /* Patient Grid */
+          <div className="grid lg:grid-cols-3 gap-8">
+            <div className="lg:col-span-2">
+              <div className="grid gap-4">
+                {filteredPatients.length > 0 ? (
+                  filteredPatients.map((patient, index) => (
+                    <PatientCard 
+                      key={index} 
+                      {...patient} 
+                      onSchedule={handleScheduleAppointment}
+                    />
+                  ))
+                ) : (
+                  <div className="text-center py-12">
+                    <p className="text-muted-foreground">
+                      {searchTerm || selectedFilter !== "all" 
+                        ? "No patients found matching your criteria." 
+                        : "No patients added yet. Click 'Add Patient' to get started."
+                      }
+                    </p>
+                  </div>
+                )}
+              </div>
+            </div>
+
+            {/* Detailed Patient Cards */}
+            <div className="space-y-6">
+              <h3 className="text-xl font-semibold text-foreground">Priority Cases</h3>
+              {detailedPatients.map((patient, index) => (
+                <PatientDetailCard key={index} {...patient} />
               ))}
             </div>
           </div>
+        )}
 
-          {/* Detailed Patient Cards */}
-          <div className="space-y-6">
-            <h3 className="text-xl font-semibold text-foreground">Priority Cases</h3>
-            {detailedPatients.map((patient, index) => (
-              <PatientDetailCard key={index} {...patient} />
-            ))}
-          </div>
-        </div>
+        {/* Dialogs */}
+        <AddPatientDialog 
+          open={showAddDialog}
+          onOpenChange={setShowAddDialog}
+          onPatientAdded={fetchPatients}
+        />
+        
+        <AppointmentDialog
+          open={showAppointmentDialog}
+          onOpenChange={setShowAppointmentDialog}
+          patientId={selectedPatient?.id}
+          patientName={selectedPatient?.name}
+          onAppointmentScheduled={() => {
+            setShowAppointmentDialog(false);
+            setSelectedPatient(null);
+          }}
+        />
       </div>
     </div>
   );
