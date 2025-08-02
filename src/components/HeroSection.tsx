@@ -3,24 +3,23 @@ import { Button } from "@/components/ui/button";
 import { Heart, Shield, Users } from "lucide-react";
 import { useLanguage } from "@/hooks/useLanguage";
 import heroImage from "@/assets/health-hero.jpg";
-
 const HeroSection = () => {
-  const { t } = useLanguage();
+  const {
+    t
+  } = useLanguage();
   const navigate = useNavigate();
-
   const handleStartMonitoring = () => {
     navigate("/auth");
   };
-
   const handleLearnMore = () => {
     const featuresSection = document.getElementById("features-section");
     if (featuresSection) {
-      featuresSection.scrollIntoView({ behavior: "smooth" });
+      featuresSection.scrollIntoView({
+        behavior: "smooth"
+      });
     }
   };
-
-  return (
-    <section className="bg-gradient-soft py-16">
+  return <section className="bg-gradient-soft py-16">
       <div className="container mx-auto px-4">
         <div className="grid lg:grid-cols-2 gap-12 items-center">
           <div className="space-y-6">
@@ -49,7 +48,7 @@ const HeroSection = () => {
                 <div className="bg-health-pink p-3 rounded-lg w-fit mx-auto mb-2">
                   <Users className="h-6 w-6 text-primary" />
                 </div>
-                <p className="text-2xl font-bold text-foreground">2,500+</p>
+                <p className="text-2xl font-bold text-foreground">102+</p>
                 <p className="text-sm text-muted-foreground">{t('hero.patientsServed')}</p>
               </div>
               <div className="text-center">
@@ -71,16 +70,10 @@ const HeroSection = () => {
 
           <div className="relative">
             <div className="absolute inset-0 bg-gradient-primary rounded-2xl transform rotate-3"></div>
-            <img 
-              src={heroImage} 
-              alt="Healthcare professionals caring for women and children"
-              className="relative rounded-2xl shadow-card w-full h-[400px] object-cover"
-            />
+            <img src={heroImage} alt="Healthcare professionals caring for women and children" className="relative rounded-2xl shadow-card w-full h-[400px] object-cover" />
           </div>
         </div>
       </div>
-    </section>
-  );
+    </section>;
 };
-
 export default HeroSection;
