@@ -5,6 +5,7 @@ import { Card } from "@/components/ui/card";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import Header from "@/components/Header";
 import { useToast } from "@/hooks/use-toast";
+import { useLanguage } from "@/hooks/useLanguage";
 
 const ReportsPage = () => {
   const [selectedPeriod, setSelectedPeriod] = useState("monthly");
@@ -13,6 +14,7 @@ const ReportsPage = () => {
   const [showReportDetails, setShowReportDetails] = useState(false);
   const [selectedReport, setSelectedReport] = useState<any>(null);
   const { toast } = useToast();
+  const { t } = useLanguage();
 
   const generateReport = async () => {
     setLoading(true);
@@ -234,7 +236,7 @@ const ReportsPage = () => {
       <div className="container mx-auto px-4 py-8">
         <div className="flex items-center justify-between mb-8">
           <div>
-            <h1 className="text-3xl font-bold text-foreground">Health Reports</h1>
+            <h1 className="text-3xl font-bold text-foreground">{t('nav.reports')}</h1>
             <p className="text-muted-foreground">Generated health analytics and performance reports</p>
           </div>
           <div className="flex space-x-3">

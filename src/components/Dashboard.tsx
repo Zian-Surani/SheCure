@@ -22,6 +22,70 @@ const Dashboard = () => {
   const [showAppointment, setShowAppointment] = useState(false);
   const [stats, setStats] = useState([]);
   const [showEmergencyAlert, setShowEmergencyAlert] = useState(false);
+
+  // Sample patient data when database is empty
+  const samplePatients = [
+    {
+      id: 'priya-001',
+      name: 'Priya Sharma',
+      age: 28,
+      condition: 'Prenatal Care - 32 weeks',
+      phone: '+91-9876543210',
+      address: 'Block A, Sector 15, Noida',
+      location: 'Itarsi, Madhya Pradesh',
+      status: 'active'
+    },
+    {
+      id: 'kavya-002',
+      name: 'Kavya Reddy',
+      age: 24,
+      condition: 'Postpartum hypertension',
+      phone: '+91-9876543211',
+      address: 'Lane 5, MG Road, Bangalore',
+      location: 'Itarsi, Madhya Pradesh',
+      status: 'critical'
+    },
+    {
+      id: 'aadhya-003',
+      name: 'Aadhya Patel',
+      age: 5,
+      condition: 'Regular checkup',
+      phone: '+91-9876543212',
+      address: 'Plot 12, Gandhi Nagar, Ahmedabad',
+      location: 'Itarsi, Madhya Pradesh',
+      status: 'active'
+    },
+    {
+      id: 'meera-004',
+      name: 'Meera Singh',
+      age: 31,
+      condition: 'Prenatal Care - 28 weeks',
+      phone: '+91-9876543213',
+      address: 'House 8, Civil Lines, Lucknow',
+      location: 'Itarsi, Madhya Pradesh',
+      status: 'active'
+    },
+    {
+      id: 'anita-005',
+      name: 'Anita Gupta',
+      age: 26,
+      condition: 'Postpartum care',
+      phone: '+91-9876543214',
+      address: 'Flat 4B, Park Street, Kolkata',
+      location: 'Itarsi, Madhya Pradesh',
+      status: 'active'
+    },
+    {
+      id: 'riya-006',
+      name: 'Riya Joshi',
+      age: 8,
+      condition: 'Vaccination due',
+      phone: '+91-9876543215',
+      address: 'Bungalow 15, Banjara Hills, Hyderabad',
+      location: 'Itarsi, Madhya Pradesh',
+      status: 'active'
+    }
+  ];
   const { toast } = useToast();
   const { t } = useLanguage();
   const navigate = useNavigate();
@@ -41,12 +105,14 @@ const Dashboard = () => {
 
       if (patientsError) throw patientsError;
 
-      setPatients(patientsData || []);
+      // Use sample data if database is empty
+      const displayPatients = patientsData?.length > 0 ? patientsData : samplePatients;
+      setPatients(displayPatients);
 
       // Update stats with real data
-      const totalPatients = patientsData?.length || 0;
-      const pregnancies = patientsData?.filter(p => p.condition?.includes('Prenatal')).length || 0;
-      const children = patientsData?.filter(p => p.age < 18).length || 0;
+      const totalPatients = displayPatients?.length || 0;
+      const pregnancies = displayPatients?.filter(p => p.condition?.includes('Prenatal')).length || 0;
+      const children = displayPatients?.filter(p => p.age < 18).length || 0;
 
       setStats([
         {
@@ -72,7 +138,7 @@ const Dashboard = () => {
         },
         {
           title: t('dashboard.activeCases'),
-          value: patientsData?.filter(p => p.status === 'active').length.toString() || "0",
+          value: displayPatients?.filter(p => p.status === 'active').length.toString() || "0",
           change: "This week",
           icon: Calendar,
           variant: "warning" as const
@@ -337,7 +403,25 @@ const Dashboard = () => {
                   <p className="font-medium text-foreground">Priya Sharma</p>
                   <p className="text-sm text-muted-foreground">High-risk pregnancy monitoring</p>
                 </div>
-                <Button variant="outline" size="sm" className="border-health-warning text-health-warning hover:bg-health-warning/10">
+                <Button 
+                  variant="outline" 
+                  size="sm" 
+                  className="border-health-warning text-health-warning hover:bg-health-warning/10"
+                  onClick={() => {
+                    const patient = {
+                      id: 'priya-001',
+                      name: 'Priya Sharma',
+                      age: 28,
+                      condition: 'High-risk pregnancy monitoring',
+                      phone: '+91-9876543210',
+                      address: 'Block A, Sector 15, Noida',
+                      location: 'Itarsi, Madhya Pradesh',
+                      status: 'critical'
+                    };
+                    setSelectedPatient(patient);
+                    setShowPatientDetails(true);
+                  }}
+                >
                   Monitor
                 </Button>
               </div>

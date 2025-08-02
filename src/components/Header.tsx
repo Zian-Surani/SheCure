@@ -4,6 +4,7 @@ import { useAuth } from "@/hooks/useAuth";
 import { useNavigate } from "react-router-dom";
 import { useToast } from "@/hooks/use-toast";
 import { useLanguage } from "@/hooks/useLanguage";
+import LanguageToggle from "@/components/LanguageToggle";
 
 const Header = () => {
   const { user, signOut } = useAuth();
@@ -60,6 +61,7 @@ const Header = () => {
           </nav>
 
           <div className="flex items-center space-x-3">
+            <LanguageToggle />
             {user && (
               <Button variant="soft" size="sm" onClick={handleSignOut}>
                 <LogOut className="h-4 w-4" />

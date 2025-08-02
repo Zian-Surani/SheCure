@@ -93,7 +93,7 @@ const Index = () => {
             </div>
             <div className="flex items-center space-x-4">
               <LanguageToggle onLanguageChange={setLanguage} />
-              <Link to="/dashboard">
+              <Link to="/auth">
                 <Button variant="health" size="lg">
                   {t('nav.login')}
                 </Button>

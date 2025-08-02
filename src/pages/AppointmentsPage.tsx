@@ -6,6 +6,7 @@ import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import Header from "@/components/Header";
 import AppointmentDialog from "@/components/AppointmentDialog";
+import { useLanguage } from "@/hooks/useLanguage";
 
 const AppointmentsPage = () => {
   const [selectedDate, setSelectedDate] = useState("2024-02-01");
@@ -13,6 +14,7 @@ const AppointmentsPage = () => {
   const [showNewAppointment, setShowNewAppointment] = useState(false);
   const [showAppointmentDetails, setShowAppointmentDetails] = useState(false);
   const [selectedAppointmentDetails, setSelectedAppointmentDetails] = useState<any>(null);
+  const { t } = useLanguage();
 
   const appointments = [
     {
@@ -129,7 +131,7 @@ const AppointmentsPage = () => {
       <div className="container mx-auto px-4 py-8">
         <div className="flex items-center justify-between mb-8">
           <div>
-            <h1 className="text-3xl font-bold text-foreground">Appointments</h1>
+            <h1 className="text-3xl font-bold text-foreground">{t('nav.appointments')}</h1>
             <p className="text-muted-foreground">Schedule and manage patient appointments</p>
           </div>
           <div className="flex space-x-3">

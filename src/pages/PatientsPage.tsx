@@ -11,6 +11,7 @@ import AddPatientDialog from "@/components/AddPatientDialog";
 import AppointmentDialog from "@/components/AppointmentDialog";
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
+import { useLanguage } from "@/hooks/useLanguage";
 import { Loader2 } from "lucide-react";
 
 interface Patient {
@@ -36,6 +37,7 @@ const PatientsPage = () => {
   const [selectedPatientDetails, setSelectedPatientDetails] = useState<any>(null);
   const [showPatientPopup, setShowPatientPopup] = useState(false);
   const { toast } = useToast();
+  const { t } = useLanguage();
 
   const exportData = () => {
     const csvContent = [
@@ -272,7 +274,7 @@ const PatientsPage = () => {
       <div className="container mx-auto px-4 py-8">
         <div className="flex items-center justify-between mb-8">
           <div>
-            <h1 className="text-3xl font-bold text-foreground">Patient Records</h1>
+            <h1 className="text-3xl font-bold text-foreground">{t('nav.patients')}</h1>
             <p className="text-muted-foreground">Manage and monitor all patient health records</p>
           </div>
           <div className="flex space-x-3">
