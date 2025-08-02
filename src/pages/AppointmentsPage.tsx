@@ -3,11 +3,16 @@ import { Calendar, Clock, Plus, Filter, MapPin, User } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import Header from "@/components/Header";
+import AppointmentDialog from "@/components/AppointmentDialog";
 
 const AppointmentsPage = () => {
   const [selectedDate, setSelectedDate] = useState("2024-02-01");
   const [viewMode, setViewMode] = useState<"day" | "week" | "month">("day");
+  const [showNewAppointment, setShowNewAppointment] = useState(false);
+  const [showAppointmentDetails, setShowAppointmentDetails] = useState(false);
+  const [selectedAppointmentDetails, setSelectedAppointmentDetails] = useState<any>(null);
 
   const appointments = [
     {
@@ -132,7 +137,7 @@ const AppointmentsPage = () => {
               <Calendar className="h-4 w-4" />
               Calendar View
             </Button>
-            <Button variant="health">
+            <Button variant="health" onClick={() => setShowNewAppointment(true)}>
               <Plus className="h-4 w-4" />
               New Appointment
             </Button>
@@ -224,7 +229,10 @@ const AppointmentsPage = () => {
                       <span className={`px-3 py-1 rounded-full text-xs font-medium ${getStatusColor(appointment.status)}`}>
                         {appointment.status.charAt(0).toUpperCase() + appointment.status.slice(1)}
                       </span>
-                      <Button variant="soft" size="sm">
+                      <Button variant="soft" size="sm" onClick={() => {
+                        setSelectedAppointmentDetails(appointment);
+                        setShowAppointmentDetails(true);
+                      }}>
                         View Details
                       </Button>
                     </div>
@@ -292,6 +300,52 @@ const AppointmentsPage = () => {
             </Card>
           </div>
         </div>
+
+        {/* New Appointment Dialog */}
+        <AppointmentDialog 
+          open={showNewAppointment}
+          onOpenChange={setShowNewAppointment}
+          patientId=""
+          patientName=""
+          onAppointmentScheduled={() => setShowNewAppointment(false)}
+        />
+
+        {/* Appointment Details Dialog */}
+        <Dialog open={showAppointmentDetails} onOpenChange={setShowAppointmentDetails}>
+          <DialogContent className="max-w-2xl">
+            <DialogHeader>
+              <DialogTitle>Appointment Details</DialogTitle>
+            </DialogHeader>
+            {selectedAppointmentDetails && (
+              <div className="space-y-4">
+                <div className="grid grid-cols-2 gap-4">
+                  <div>
+                    <h4 className="font-semibold text-foreground mb-2">Patient Information</h4>
+                    <p><span className="font-medium">Name:</span> {selectedAppointmentDetails.patientName}</p>
+                    <p><span className="font-medium">Time:</span> {selectedAppointmentDetails.time}</p>
+                    <p><span className="font-medium">Duration:</span> {selectedAppointmentDetails.duration}</p>
+                    <p><span className="font-medium">Type:</span> {selectedAppointmentDetails.type}</p>
+                  </div>
+                  <div>
+                    <h4 className="font-semibold text-foreground mb-2">Appointment Details</h4>
+                    <p><span className="font-medium">Location:</span> {selectedAppointmentDetails.location}</p>
+                    <p><span className="font-medium">Doctor:</span> {selectedAppointmentDetails.doctor}</p>
+                    <p><span className="font-medium">Status:</span> 
+                      <span className={`ml-1 px-2 py-1 rounded-full text-xs font-medium ${getStatusColor(selectedAppointmentDetails.status)}`}>
+                        {selectedAppointmentDetails.status}
+                      </span>
+                    </p>
+                    <p><span className="font-medium">Priority:</span> {selectedAppointmentDetails.priority}</p>
+                  </div>
+                </div>
+                <div className="flex space-x-2 pt-4">
+                  <Button variant="health" size="sm">Edit Appointment</Button>
+                  <Button variant="outline" size="sm">Cancel Appointment</Button>
+                </div>
+              </div>
+            )}
+          </DialogContent>
+        </Dialog>
       </div>
     </div>
   );

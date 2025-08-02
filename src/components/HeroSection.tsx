@@ -9,7 +9,7 @@ const HeroSection = () => {
   const navigate = useNavigate();
 
   const handleStartMonitoring = () => {
-    navigate("/auth");
+    navigate("/dashboard");
   };
 
   const handleLearnMore = () => {

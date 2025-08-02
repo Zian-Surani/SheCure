@@ -2,6 +2,7 @@ import { useState } from "react";
 import { FileText, Download, TrendingUp, Calendar, BarChart3, PieChart, Filter, Loader2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import Header from "@/components/Header";
 import { useToast } from "@/hooks/use-toast";
 
@@ -9,6 +10,8 @@ const ReportsPage = () => {
   const [selectedPeriod, setSelectedPeriod] = useState("monthly");
   const [selectedCategory, setSelectedCategory] = useState("all");
   const [loading, setLoading] = useState(false);
+  const [showReportDetails, setShowReportDetails] = useState(false);
+  const [selectedReport, setSelectedReport] = useState<any>(null);
   const { toast } = useToast();
 
   const generateReport = async () => {
@@ -322,7 +325,10 @@ const ReportsPage = () => {
                     <Download className="h-4 w-4" />
                     Download
                   </Button>
-                  <Button variant="outline" size="sm">
+                  <Button variant="outline" size="sm" onClick={() => {
+                    setSelectedReport(report);
+                    setShowReportDetails(true);
+                  }}>
                     View Details
                   </Button>
                 </div>
@@ -356,6 +362,66 @@ const ReportsPage = () => {
             </Button>
           </div>
         </Card>
+
+        {/* Report Details Dialog */}
+        <Dialog open={showReportDetails} onOpenChange={setShowReportDetails}>
+          <DialogContent className="max-w-4xl">
+            <DialogHeader>
+              <DialogTitle>Report Details</DialogTitle>
+            </DialogHeader>
+            {selectedReport && (
+              <div className="space-y-6">
+                <div className="grid grid-cols-2 gap-6">
+                  <div>
+                    <h4 className="font-semibold text-foreground mb-2">Report Information</h4>
+                    <div className="space-y-2 text-sm">
+                      <p><span className="font-medium">Title:</span> {selectedReport.title}</p>
+                      <p><span className="font-medium">Type:</span> {selectedReport.type}</p>
+                      <p><span className="font-medium">Period:</span> {selectedReport.period}</p>
+                      <p><span className="font-medium">Generated:</span> {new Date(selectedReport.generatedDate).toLocaleDateString('en-IN')}</p>
+                      <p><span className="font-medium">Status:</span> 
+                        <span className={`ml-1 px-2 py-1 rounded-full text-xs font-medium ${getStatusColor(selectedReport.status)}`}>
+                          {selectedReport.status}
+                        </span>
+                      </p>
+                    </div>
+                  </div>
+                  <div>
+                    <h4 className="font-semibold text-foreground mb-2">Summary</h4>
+                    <p className="text-sm text-muted-foreground leading-relaxed">
+                      {selectedReport.summary}
+                    </p>
+                  </div>
+                </div>
+
+                <div>
+                  <h4 className="font-semibold text-foreground mb-4">Key Metrics</h4>
+                  <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+                    {formatMetrics(selectedReport.keyMetrics).map((metric, index) => (
+                      <Card key={index} className="p-4 bg-gradient-card">
+                        <div className="text-2xl font-bold text-primary">{metric.value}</div>
+                        <div className="text-sm text-muted-foreground">{metric.label}</div>
+                      </Card>
+                    ))}
+                  </div>
+                </div>
+
+                <div className="flex space-x-2 pt-4">
+                  <Button variant="health" size="sm" onClick={() => downloadReport(selectedReport.id, selectedReport.title)}>
+                    <Download className="h-4 w-4 mr-2" />
+                    Download Report
+                  </Button>
+                  <Button variant="soft" size="sm">
+                    Schedule Similar Report
+                  </Button>
+                  <Button variant="outline" size="sm" onClick={() => setShowReportDetails(false)}>
+                    Close
+                  </Button>
+                </div>
+              </div>
+            )}
+          </DialogContent>
+        </Dialog>
       </div>
     </div>
   );

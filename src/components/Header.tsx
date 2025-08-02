@@ -18,7 +18,7 @@ const Header = () => {
         title: "Signed out successfully",
         description: "See you next time!",
       });
-      navigate("/auth");
+      navigate("/");
     } catch (error: any) {
       toast({
         title: "Error signing out",

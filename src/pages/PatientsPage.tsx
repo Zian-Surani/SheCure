@@ -1,8 +1,9 @@
 import { useState, useEffect } from "react";
-import { Search, Filter, Plus, Download, Thermometer, Weight, Heart, Activity } from "lucide-react";
+import { Search, Filter, Plus, Download, Thermometer, Weight, Heart, Activity, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Card } from "@/components/ui/card";
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import Header from "@/components/Header";
 import PatientCard from "@/components/PatientCard";
 import PatientDetailCard from "@/components/PatientDetailCard";
@@ -33,6 +34,7 @@ const PatientsPage = () => {
   const [showAppointmentDialog, setShowAppointmentDialog] = useState(false);
   const [selectedPatient, setSelectedPatient] = useState<{ id: string; name: string } | null>(null);
   const [selectedPatientDetails, setSelectedPatientDetails] = useState<any>(null);
+  const [showPatientPopup, setShowPatientPopup] = useState(false);
   const { toast } = useToast();
 
   const exportData = () => {
@@ -61,6 +63,7 @@ const PatientsPage = () => {
 
   const handleViewDetails = (patient: any) => {
     setSelectedPatientDetails(patient);
+    setShowPatientPopup(true);
   };
 
   useEffect(() => {
@@ -418,6 +421,151 @@ const PatientsPage = () => {
             setSelectedPatient(null);
           }}
         />
+
+        {/* Enhanced Patient Details Popup */}
+        <Dialog open={showPatientPopup} onOpenChange={setShowPatientPopup}>
+          <DialogContent className="max-w-4xl max-h-[80vh] overflow-y-auto">
+            <DialogHeader>
+              <DialogTitle className="flex items-center justify-between">
+                <span>Patient Details</span>
+                <Button variant="ghost" size="sm" onClick={() => setShowPatientPopup(false)}>
+                  <X className="h-4 w-4" />
+                </Button>
+              </DialogTitle>
+            </DialogHeader>
+            {selectedPatientDetails && (
+              <div className="space-y-6">
+                {/* Patient Basic Info */}
+                <div className="grid md:grid-cols-2 gap-6">
+                  <Card className="p-6 bg-gradient-card">
+                    <h4 className="text-lg font-semibold text-foreground mb-4">Patient Information</h4>
+                    <div className="space-y-3">
+                      <div className="flex justify-between items-center">
+                        <span className="text-sm font-medium text-muted-foreground">Name:</span>
+                        <span className="text-sm font-semibold text-foreground">{selectedPatientDetails.name}</span>
+                      </div>
+                      <div className="flex justify-between items-center">
+                        <span className="text-sm font-medium text-muted-foreground">Age:</span>
+                        <span className="text-sm font-semibold text-foreground">{selectedPatientDetails.age} years</span>
+                      </div>
+                      <div className="flex justify-between items-center">
+                        <span className="text-sm font-medium text-muted-foreground">Phone:</span>
+                        <span className="text-sm font-semibold text-foreground">{selectedPatientDetails.phone}</span>
+                      </div>
+                      <div className="flex justify-between items-center">
+                        <span className="text-sm font-medium text-muted-foreground">Status:</span>
+                        <span className={`px-2 py-1 rounded-full text-xs font-medium ${
+                          selectedPatientDetails.status === 'active' ? 'bg-health-success text-white' :
+                          selectedPatientDetails.status === 'critical' ? 'bg-destructive text-destructive-foreground' :
+                          'bg-muted text-muted-foreground'
+                        }`}>
+                          {selectedPatientDetails.status}
+                        </span>
+                      </div>
+                      <div className="flex justify-between items-start">
+                        <span className="text-sm font-medium text-muted-foreground">Address:</span>
+                        <span className="text-sm font-semibold text-foreground text-right max-w-[200px]">{selectedPatientDetails.address || 'Not provided'}</span>
+                      </div>
+                      <div className="flex justify-between items-start">
+                        <span className="text-sm font-medium text-muted-foreground">Location:</span>
+                        <span className="text-sm font-semibold text-foreground text-right max-w-[200px]">{selectedPatientDetails.location}</span>
+                      </div>
+                    </div>
+                  </Card>
+
+                  <Card className="p-6 bg-gradient-card">
+                    <h4 className="text-lg font-semibold text-foreground mb-4">Medical Information</h4>
+                    <div className="space-y-3">
+                      <div className="flex justify-between items-start">
+                        <span className="text-sm font-medium text-muted-foreground">Condition:</span>
+                        <span className="text-sm font-semibold text-foreground text-right max-w-[200px]">{selectedPatientDetails.condition || 'Not specified'}</span>
+                      </div>
+                      <div className="flex justify-between items-center">
+                        <span className="text-sm font-medium text-muted-foreground">Last Visit:</span>
+                        <span className="text-sm font-semibold text-foreground">{selectedPatientDetails.lastVisit || new Date(selectedPatientDetails.created_at).toLocaleDateString()}</span>
+                      </div>
+                      <div className="flex justify-between items-center">
+                        <span className="text-sm font-medium text-muted-foreground">Patient ID:</span>
+                        <span className="text-sm font-semibold text-foreground">{selectedPatientDetails.id?.slice(0, 8) || 'N/A'}</span>
+                      </div>
+                      {selectedPatientDetails.aadhar_number && (
+                        <div className="flex justify-between items-center">
+                          <span className="text-sm font-medium text-muted-foreground">Aadhar:</span>
+                          <span className="text-sm font-semibold text-foreground">****-****-{selectedPatientDetails.aadhar_number.slice(-4)}</span>
+                        </div>
+                      )}
+                    </div>
+                  </Card>
+                </div>
+
+                {/* Mock Health Metrics */}
+                <Card className="p-6 bg-gradient-card">
+                  <h4 className="text-lg font-semibold text-foreground mb-4 flex items-center">
+                    <Activity className="h-5 w-5 mr-2 text-primary" />
+                    Recent Health Metrics
+                  </h4>
+                  <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+                    <div className="bg-background p-4 rounded-lg border">
+                      <div className="flex items-center space-x-2 mb-2">
+                        <Heart className="h-4 w-4 text-health-success" />
+                        <span className="text-xs text-muted-foreground">Blood Pressure</span>
+                      </div>
+                      <div className="text-lg font-bold text-foreground">120/80</div>
+                      <div className="text-xs text-health-success">Normal</div>
+                    </div>
+                    <div className="bg-background p-4 rounded-lg border">
+                      <div className="flex items-center space-x-2 mb-2">
+                        <Weight className="h-4 w-4 text-primary" />
+                        <span className="text-xs text-muted-foreground">Weight</span>
+                      </div>
+                      <div className="text-lg font-bold text-foreground">65 kg</div>
+                      <div className="text-xs text-health-success">Healthy</div>
+                    </div>
+                    <div className="bg-background p-4 rounded-lg border">
+                      <div className="flex items-center space-x-2 mb-2">
+                        <Thermometer className="h-4 w-4 text-health-warning" />
+                        <span className="text-xs text-muted-foreground">Temperature</span>
+                      </div>
+                      <div className="text-lg font-bold text-foreground">98.6°F</div>
+                      <div className="text-xs text-health-success">Normal</div>
+                    </div>
+                    <div className="bg-background p-4 rounded-lg border">
+                      <div className="flex items-center space-x-2 mb-2">
+                        <Activity className="h-4 w-4 text-primary" />
+                        <span className="text-xs text-muted-foreground">Heart Rate</span>
+                      </div>
+                      <div className="text-lg font-bold text-foreground">72 bpm</div>
+                      <div className="text-xs text-health-success">Normal</div>
+                    </div>
+                  </div>
+                </Card>
+
+                {/* Action Buttons */}
+                <div className="flex flex-wrap gap-3 pt-4">
+                  <Button variant="health" size="sm" onClick={() => {
+                    setSelectedPatient({ id: selectedPatientDetails.id, name: selectedPatientDetails.name });
+                    setShowAppointmentDialog(true);
+                    setShowPatientPopup(false);
+                  }}>
+                    Schedule Appointment
+                  </Button>
+                  <Button variant="soft" size="sm">
+                    View Medical History
+                  </Button>
+                  <Button variant="outline" size="sm">
+                    Update Records
+                  </Button>
+                  <Button variant="outline" size="sm">
+                    Generate Report
+                  </Button>
+                  <Button variant="ghost" size="sm" onClick={() => setShowPatientPopup(false)}>
+                    Close
+                  </Button>
+                </div>
+              </div>
+            )}
+          </DialogContent>
+        </Dialog>
       </div>
     </div>
   );

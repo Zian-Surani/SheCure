@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { Baby, Calendar, Heart, TrendingUp, Users, Activity, Thermometer, Weight, X } from "lucide-react";
+import { Baby, Calendar, Heart, TrendingUp, Users, Activity, Thermometer, Weight, X, AlertTriangle, Phone } from "lucide-react";
 import StatsCard from "@/components/StatsCard";
 import PatientCard from "@/components/PatientCard";
 import PatientDetailCard from "@/components/PatientDetailCard";
@@ -21,6 +21,7 @@ const Dashboard = () => {
   const [showAddPatient, setShowAddPatient] = useState(false);
   const [showAppointment, setShowAppointment] = useState(false);
   const [stats, setStats] = useState([]);
+  const [showEmergencyAlert, setShowEmergencyAlert] = useState(false);
   const { toast } = useToast();
   const { t } = useLanguage();
   const navigate = useNavigate();
@@ -104,6 +105,15 @@ const Dashboard = () => {
     navigate("/reports");
   };
 
+  const handleEmergencyAlert = () => {
+    setShowEmergencyAlert(true);
+    toast({
+      title: "Emergency Alert Triggered",
+      description: "Emergency services have been notified. Medical team will respond immediately.",
+      variant: "destructive",
+    });
+  };
+
 
   const detailedPatient = {
     name: "Priya Sharma",
@@ -185,9 +195,22 @@ const Dashboard = () => {
 
   return (
     <div className="space-y-8">
-      <div>
-        <h2 className="text-2xl font-bold text-foreground mb-2">{t('dashboard.title')}</h2>
-        <p className="text-muted-foreground">{t('dashboard.subtitle')}</p>
+      <div className="flex items-center justify-between">
+        <div>
+          <h2 className="text-2xl font-bold text-foreground mb-2">{t('dashboard.title')}</h2>
+          <p className="text-muted-foreground">{t('dashboard.subtitle')}</p>
+        </div>
+        
+        {/* Emergency Alert Button */}
+        <Button 
+          variant="destructive" 
+          size="lg" 
+          onClick={handleEmergencyAlert}
+          className="animate-pulse bg-destructive hover:bg-destructive/90 shadow-lg"
+        >
+          <AlertTriangle className="h-5 w-5 mr-2" />
+          Emergency Alert
+        </Button>
       </div>
 
       {/* Stats Grid */}
@@ -291,6 +314,35 @@ const Dashboard = () => {
               </button>
             </div>
           </div>
+
+          {/* Critical Patients Alert */}
+          <Card className="p-6 bg-gradient-to-r from-destructive/10 to-health-warning/10 border-destructive/20">
+            <h4 className="font-semibold text-foreground mb-4 flex items-center">
+              <AlertTriangle className="h-5 w-5 mr-2 text-destructive" />
+              Critical Patients Alert
+            </h4>
+            <div className="space-y-3">
+              <div className="flex items-center justify-between p-3 bg-background rounded-lg border border-destructive/20">
+                <div>
+                  <p className="font-medium text-foreground">Kavya Reddy</p>
+                  <p className="text-sm text-muted-foreground">Postpartum hypertension</p>
+                </div>
+                <Button variant="destructive" size="sm" onClick={handleEmergencyAlert}>
+                  <Phone className="h-4 w-4 mr-1" />
+                  Call
+                </Button>
+              </div>
+              <div className="flex items-center justify-between p-3 bg-background rounded-lg border border-health-warning/30">
+                <div>
+                  <p className="font-medium text-foreground">Priya Sharma</p>
+                  <p className="text-sm text-muted-foreground">High-risk pregnancy monitoring</p>
+                </div>
+                <Button variant="outline" size="sm" className="border-health-warning text-health-warning hover:bg-health-warning/10">
+                  Monitor
+                </Button>
+              </div>
+            </div>
+          </Card>
         </div>
       </div>
 
@@ -360,6 +412,39 @@ const Dashboard = () => {
         patientName={selectedPatient?.name || ''}
         onAppointmentScheduled={fetchDashboardData}
       />
+
+      {/* Emergency Alert Dialog */}
+      <Dialog open={showEmergencyAlert} onOpenChange={setShowEmergencyAlert}>
+        <DialogContent className="max-w-md">
+          <DialogHeader>
+            <DialogTitle className="flex items-center text-destructive">
+              <AlertTriangle className="h-5 w-5 mr-2" />
+              Emergency Alert Activated
+            </DialogTitle>
+          </DialogHeader>
+          <div className="space-y-4">
+            <div className="bg-destructive/10 p-4 rounded-lg border border-destructive/20">
+              <p className="text-sm text-foreground">
+                Emergency services have been notified and medical assistance is being dispatched.
+              </p>
+              <div className="mt-3 space-y-2">
+                <p className="text-xs text-muted-foreground">• Medical team ETA: 10-15 minutes</p>
+                <p className="text-xs text-muted-foreground">• Emergency contact: +91 108</p>
+                <p className="text-xs text-muted-foreground">• Reference ID: EMG-{new Date().getTime().toString().slice(-6)}</p>
+              </div>
+            </div>
+            <div className="flex space-x-2">
+              <Button variant="destructive" size="sm" className="flex-1">
+                <Phone className="h-4 w-4 mr-2" />
+                Call 108
+              </Button>
+              <Button variant="outline" size="sm" onClick={() => setShowEmergencyAlert(false)}>
+                Close
+              </Button>
+            </div>
+          </div>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 };

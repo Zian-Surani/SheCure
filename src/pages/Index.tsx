@@ -76,7 +76,7 @@ const Index = () => {
   ];
 
   return (
-    <div className="min-h-screen bg-background">
+    <div className="min-h-screen bg-background animate-fade-in">
       {/* Header with Employee Login */}
       <header className="border-b border-border bg-card shadow-soft sticky top-0 z-50">
         <div className="container mx-auto px-4 py-4">
@@ -93,7 +93,7 @@ const Index = () => {
             </div>
             <div className="flex items-center space-x-4">
               <LanguageToggle onLanguageChange={setLanguage} />
-              <Link to="/auth">
+              <Link to="/dashboard">
                 <Button variant="health" size="lg">
                   {t('nav.login')}
                 </Button>
