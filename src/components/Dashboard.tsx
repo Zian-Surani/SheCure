@@ -261,18 +261,18 @@ const Dashboard = () => {
 
   return (
     <div className="space-y-8">
-      <div className="flex items-center justify-between">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
-          <h2 className="text-2xl font-bold text-foreground mb-2">{t('dashboard.title')}</h2>
-          <p className="text-muted-foreground">{t('dashboard.subtitle')}</p>
+          <h2 className="text-xl sm:text-2xl font-bold text-foreground mb-2">{t('dashboard.title')}</h2>
+          <p className="text-sm sm:text-base text-muted-foreground">{t('dashboard.subtitle')}</p>
         </div>
         
         {/* Emergency Alert Button */}
         <Button 
           variant="destructive" 
-          size="lg" 
+          size="mobile" 
           onClick={handleEmergencyAlert}
-          className="animate-pulse bg-destructive hover:bg-destructive/90 shadow-lg"
+          className="animate-pulse bg-destructive hover:bg-destructive/90 shadow-lg sm:size-lg w-full sm:w-auto"
         >
           <AlertTriangle className="h-5 w-5 mr-2" />
           {t('common.emergencyAlert')}
@@ -280,16 +280,16 @@ const Dashboard = () => {
       </div>
 
       {/* Stats Grid */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6">
         {stats.map((stat, index) => (
           <StatsCard key={index} {...stat} />
         ))}
       </div>
 
       {/* Recent Activity */}
-      <div className="grid lg:grid-cols-3 gap-8">
+      <div className="grid gap-6 lg:gap-8 lg:grid-cols-3">
         <div className="lg:col-span-2">
-          <h3 className="text-xl font-semibold text-foreground mb-4">{t('dashboard.recentPatients')}</h3>
+          <h3 className="text-lg sm:text-xl font-semibold text-foreground mb-4">{t('dashboard.recentPatients')}</h3>
           <div className="grid gap-4">
             {patients.length > 0 ? (
               patients.map((patient, index) => (

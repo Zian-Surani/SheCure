@@ -22,10 +22,11 @@ const buttonVariants = cva(
         soft: "bg-primary-soft text-primary hover:bg-primary-soft/80",
       },
       size: {
-        default: "h-10 px-4 py-2",
-        sm: "h-9 rounded-md px-3",
-        lg: "h-11 rounded-md px-8",
-        icon: "h-10 w-10",
+        default: "h-10 px-4 py-2 md:h-10 md:px-4 md:py-2",
+        sm: "h-9 rounded-md px-3 md:h-9 md:px-3",
+        lg: "h-12 rounded-md px-6 md:h-11 md:px-8 text-base md:text-sm",
+        icon: "h-10 w-10 md:h-10 md:w-10",
+        mobile: "h-12 px-6 py-3 text-base rounded-lg min-w-[120px]",
       },
     },
     defaultVariants: {

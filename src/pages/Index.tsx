@@ -79,22 +79,24 @@ const Index = () => {
     <div className="min-h-screen bg-background animate-fade-in">
       {/* Header with Employee Login */}
       <header className="border-b border-border bg-card shadow-soft sticky top-0 z-50">
-        <div className="container mx-auto px-4 py-4">
+        <div className="container mx-auto px-3 sm:px-4 py-3 sm:py-4">
           <div className="flex items-center justify-between">
             <div className="flex items-center space-x-2 cursor-pointer" onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}>
               <img 
                 src="/lovable-uploads/25ad9f45-77ed-4f46-8839-20b7edc24d97.png" 
                 alt="SheCure Logo" 
-                className="h-8 w-auto"
+                className="h-6 sm:h-8 w-auto"
               />
-              <span className="text-xl font-bold bg-gradient-primary bg-clip-text text-transparent">
+              <span className="text-lg sm:text-xl font-bold bg-gradient-primary bg-clip-text text-transparent">
                 SheCure
               </span>
             </div>
-            <div className="flex items-center space-x-4">
-              <LanguageToggle onLanguageChange={setLanguage} />
+            <div className="flex items-center space-x-2 sm:space-x-4">
+              <div className="hidden sm:block">
+                <LanguageToggle onLanguageChange={setLanguage} />
+              </div>
               <Link to="/auth">
-                <Button variant="health" size="lg">
+                <Button variant="health" size="mobile" className="sm:size-lg text-sm sm:text-base">
                   {t('nav.login')}
                 </Button>
               </Link>
@@ -107,18 +109,18 @@ const Index = () => {
       <HeroSection />
 
       {/* Features Section */}
-      <section id="features-section" className="py-20 bg-gradient-soft">
+      <section id="features-section" className="py-12 sm:py-16 md:py-20 bg-gradient-soft">
         <div className="container mx-auto px-4">
-          <div className="text-center mb-16">
-            <h2 className="text-3xl lg:text-4xl font-bold text-foreground mb-4">
+          <div className="text-center mb-12 sm:mb-16">
+            <h2 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-foreground mb-3 sm:mb-4">
               {t('features.title')}
             </h2>
-            <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
+            <p className="text-base sm:text-lg text-muted-foreground max-w-2xl mx-auto px-4">
               {t('features.subtitle')}
             </p>
           </div>
           
-          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+          <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8">
             {features.map((feature, index) => (
               <FeatureCard key={index} {...feature} />
             ))}
@@ -127,18 +129,18 @@ const Index = () => {
       </section>
 
       {/* About Developers Section */}
-      <section className="py-20 bg-background">
+      <section className="py-12 sm:py-16 md:py-20 bg-background">
         <div className="container mx-auto px-4">
-          <div className="text-center mb-16">
-            <h2 className="text-3xl lg:text-4xl font-bold text-foreground mb-4">
+          <div className="text-center mb-12 sm:mb-16">
+            <h2 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-foreground mb-3 sm:mb-4">
               {t('about.title')}
             </h2>
-            <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
+            <p className="text-base sm:text-lg text-muted-foreground max-w-2xl mx-auto px-4">
               {t('about.subtitle')}
             </p>
           </div>
           
-          <div className="grid md:grid-cols-2 gap-8 max-w-4xl mx-auto">
+          <div className="grid gap-6 sm:gap-8 max-w-4xl mx-auto md:grid-cols-2">
             {developers.map((developer, index) => (
               <DeveloperCard key={index} {...developer} />
             ))}
@@ -147,14 +149,14 @@ const Index = () => {
       </section>
 
       {/* Mission Section */}
-      <section className="py-20 bg-gradient-card">
+      <section className="py-12 sm:py-16 md:py-20 bg-gradient-card">
         <div className="container mx-auto px-4">
-          <Card className="p-8 max-w-4xl mx-auto text-center bg-gradient-primary shadow-card">
-            <Shield className="h-12 w-12 text-white mx-auto mb-6" />
-            <h2 className="text-2xl lg:text-3xl font-bold text-white mb-4">
+          <Card className="p-6 sm:p-8 max-w-4xl mx-auto text-center bg-gradient-primary shadow-card">
+            <Shield className="h-8 w-8 sm:h-12 sm:w-12 text-white mx-auto mb-4 sm:mb-6" />
+            <h2 className="text-xl sm:text-2xl lg:text-3xl font-bold text-white mb-3 sm:mb-4">
               {t('footer.mission')}
             </h2>
-            <p className="text-lg text-white/90 leading-relaxed">
+            <p className="text-base sm:text-lg text-white/90 leading-relaxed">
               {t('footer.missionText')}
             </p>
           </Card>
