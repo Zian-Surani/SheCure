@@ -81,22 +81,30 @@ const Index = () => {
       <header className="border-b border-border bg-card shadow-soft sticky top-0 z-50">
         <div className="container mx-auto px-3 sm:px-4 py-3 sm:py-4">
           <div className="flex items-center justify-between">
-            <div className="flex items-center space-x-2 cursor-pointer" onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}>
+            <div className="flex items-center space-x-2 cursor-pointer flex-1 min-w-0" onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}>
               <img 
                 src="/lovable-uploads/25ad9f45-77ed-4f46-8839-20b7edc24d97.png" 
                 alt="SheCure Logo" 
-                className="h-6 sm:h-8 w-auto"
+                className="h-6 sm:h-8 w-auto flex-shrink-0"
               />
-              <span className="text-lg sm:text-xl font-bold bg-gradient-primary bg-clip-text text-transparent">
-                SheCure
-              </span>
+              <div className="min-w-0">
+                <span className="text-lg sm:text-xl font-bold bg-gradient-primary bg-clip-text text-transparent block truncate">
+                  SheCure
+                </span>
+                <span className="text-xs text-muted-foreground hidden xs:block">
+                  Women & Children Wellness
+                </span>
+              </div>
             </div>
-            <div className="flex items-center space-x-2 sm:space-x-4">
+            <div className="flex items-center space-x-2 flex-shrink-0">
               <div className="hidden sm:block">
                 <LanguageToggle onLanguageChange={setLanguage} />
               </div>
+              <div className="sm:hidden">
+                <LanguageToggle onLanguageChange={setLanguage} />
+              </div>
               <Link to="/auth">
-                <Button variant="health" size="mobile" className="sm:size-lg text-sm sm:text-base">
+                <Button variant="health" size="sm" className="text-xs sm:text-sm px-3 sm:px-4">
                   {t('nav.login')}
                 </Button>
               </Link>

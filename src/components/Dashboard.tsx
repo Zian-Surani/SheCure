@@ -10,6 +10,7 @@ import AppointmentDialog from "@/components/AppointmentDialog";
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
 import { useLanguage } from "@/hooks/useLanguage";
+import { useTranslation } from "@/hooks/useTranslation";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
@@ -87,7 +88,8 @@ const Dashboard = () => {
     }
   ];
   const { toast } = useToast();
-  const { t } = useLanguage();
+  const { t, language } = useLanguage();
+  const { translatePatientData } = useTranslation();
   const navigate = useNavigate();
 
   useEffect(() => {

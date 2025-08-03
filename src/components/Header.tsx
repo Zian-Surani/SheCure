@@ -33,15 +33,15 @@ const Header = () => {
     <header className="bg-gradient-soft border-b border-border sticky top-0 z-50">
       <div className="container mx-auto px-3 sm:px-4 py-3 sm:py-4">
         <div className="flex items-center justify-between">
-            <div className="flex items-center space-x-2 sm:space-x-3 cursor-pointer" onClick={() => user ? navigate('/dashboard') : navigate('/auth')}>
+            <div className="flex items-center space-x-2 cursor-pointer flex-1 min-w-0" onClick={() => user ? navigate('/dashboard') : navigate('/auth')}>
             <img 
               src="/lovable-uploads/25ad9f45-77ed-4f46-8839-20b7edc24d97.png" 
               alt="SheCure Logo" 
-              className="h-8 sm:h-10 md:h-12 w-auto"
+              className="h-6 sm:h-8 md:h-10 w-auto flex-shrink-0"
             />
-            <div className="hidden xs:block">
-              <h1 className="text-lg sm:text-xl font-bold text-foreground">SheCure</h1>
-              <p className="text-xs sm:text-sm text-muted-foreground hidden sm:block">Women & Children Wellness</p>
+            <div className="min-w-0">
+              <h1 className="text-base sm:text-lg md:text-xl font-bold text-foreground truncate">SheCure</h1>
+              <p className="text-xs sm:text-sm text-muted-foreground hidden xs:block">Women & Children Wellness</p>
             </div>
           </div>
           
@@ -60,18 +60,21 @@ const Header = () => {
             </a>
           </nav>
 
-          <div className="flex items-center space-x-2 sm:space-x-3">
+          <div className="flex items-center space-x-1 sm:space-x-2 flex-shrink-0">
             <div className="hidden sm:block">
               <LanguageToggle />
             </div>
             {user && (
-              <Button variant="soft" size="sm" onClick={handleSignOut} className="hidden sm:flex">
-                <LogOut className="h-4 w-4" />
-                <span className="hidden md:inline">{t('nav.signOut')}</span>
+              <Button variant="soft" size="sm" onClick={handleSignOut} className="hidden sm:flex text-xs">
+                <LogOut className="h-3 w-3 sm:h-4 sm:w-4" />
+                <span className="hidden md:inline ml-1">{t('nav.signOut')}</span>
               </Button>
             )}
-            <Button variant="ghost" size="icon" className="lg:hidden p-2">
-              <Menu className="h-5 w-5" />
+            <div className="sm:hidden">
+              <LanguageToggle />
+            </div>
+            <Button variant="ghost" size="icon" className="lg:hidden p-1.5 sm:p-2">
+              <Menu className="h-4 w-4 sm:h-5 sm:w-5" />
             </Button>
           </div>
         </div>
