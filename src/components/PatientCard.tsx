@@ -65,7 +65,7 @@ const PatientCard = ({ id, name, age, condition, lastVisit, location, phone, sta
         </div>
       </div>
 
-      <div className="space-y-2">
+      <div className="space-y-3">
         <Button 
           variant="health" 
           size="sm" 
@@ -74,11 +74,11 @@ const PatientCard = ({ id, name, age, condition, lastVisit, location, phone, sta
         >
           View Details
         </Button>
-        <div className="grid grid-cols-3 gap-2">
+        <div className="grid grid-cols-3 gap-3">
           <Button 
             variant="soft" 
             size="sm" 
-            className="text-xs"
+            className="text-xs whitespace-nowrap"
             onClick={() => id && onSchedule?.(id, name)}
           >
             Schedule
@@ -86,7 +86,7 @@ const PatientCard = ({ id, name, age, condition, lastVisit, location, phone, sta
           <Button 
             variant="outline" 
             size="sm" 
-            className="text-xs"
+            className="text-xs whitespace-nowrap"
             onClick={() => id && onViewMedicalHistory?.(id, name)}
           >
             History
@@ -94,7 +94,7 @@ const PatientCard = ({ id, name, age, condition, lastVisit, location, phone, sta
           <Button 
             variant="outline" 
             size="sm" 
-            className="text-xs"
+            className="text-xs whitespace-nowrap"
             onClick={() => id && onUpdateRecords?.(id, name)}
           >
             Update

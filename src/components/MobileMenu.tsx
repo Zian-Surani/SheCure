@@ -95,7 +95,7 @@ const MobileMenu = () => {
                 <button
                   key={item.path}
                   onClick={() => handleNavigation(item.path)}
-                  className="w-full flex items-center space-x-3 px-4 py-3 rounded-lg text-foreground hover:bg-primary-soft transition-colors"
+                  className="w-full flex items-center gap-3 px-4 py-3 rounded-lg text-foreground hover:bg-primary-soft transition-colors"
                 >
                   <item.icon className="h-5 w-5" />
                   <span className="font-medium">{item.label}</span>
@@ -115,7 +115,7 @@ const MobileMenu = () => {
             {/* User Actions */}
             {user && (
               <div className="space-y-3">
-                <div className="flex items-center space-x-3 p-3 rounded-lg bg-gradient-card">
+                <div className="flex items-center gap-3 p-3 rounded-lg bg-gradient-card">
                   <div className="h-10 w-10 rounded-full bg-gradient-primary flex items-center justify-center">
                     <User className="h-5 w-5 text-white" />
                   </div>

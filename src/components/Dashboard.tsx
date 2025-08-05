@@ -482,7 +482,7 @@ const Dashboard = () => {
               </div>
               <div>
                 <h5 className="font-semibold text-foreground mb-2">{t('dashboard.quickActions')}</h5>
-                <div className="space-y-2">
+                <div className="space-y-3">
                   <Button variant="health" size="sm" className="w-full" onClick={() => handleScheduleAppointment(selectedPatient?.id, selectedPatient?.name)}>
                     {t('dashboard.scheduleAppointment')}
                   </Button>
@@ -541,7 +541,7 @@ const Dashboard = () => {
                 <p className="text-xs text-muted-foreground">• Reference ID: EMG-{new Date().getTime().toString().slice(-6)}</p>
               </div>
             </div>
-            <div className="flex space-x-2">
+            <div className="flex gap-3">
               <Button variant="destructive" size="sm" className="flex-1">
                 <Phone className="h-4 w-4 mr-2" />
                 Call 108

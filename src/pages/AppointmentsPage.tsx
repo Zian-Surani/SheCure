@@ -134,14 +134,14 @@ const AppointmentsPage = () => {
             <h1 className="text-2xl sm:text-3xl font-bold text-foreground">{t('nav.appointments')}</h1>
             <p className="text-sm sm:text-base text-muted-foreground">Schedule and manage patient appointments</p>
           </div>
-          <div className="flex flex-col sm:flex-row space-y-2 sm:space-y-0 sm:space-x-3">
+          <div className="flex flex-col gap-3 sm:flex-row sm:gap-3">
             <Button variant="soft" className="w-full sm:w-auto">
-              <Calendar className="h-4 w-4" />
-              <span className="ml-1">{t('common.calendarView')}</span>
+              <Calendar className="h-4 w-4 mr-2" />
+              <span>{t('common.calendarView')}</span>
             </Button>
             <Button variant="health" onClick={() => setShowNewAppointment(true)} className="w-full sm:w-auto">
-              <Plus className="h-4 w-4" />
-              <span className="ml-1">{t('common.newAppointment')}</span>
+              <Plus className="h-4 w-4 mr-2" />
+              <span>{t('common.newAppointment')}</span>
             </Button>
           </div>
         </div>
@@ -155,7 +155,7 @@ const AppointmentsPage = () => {
               onChange={(e) => setSelectedDate(e.target.value)}
               className="px-3 py-2 border rounded-lg bg-background text-foreground w-full sm:w-auto"
             />
-            <div className="flex gap-2 w-full sm:w-auto">
+            <div className="flex gap-3 w-full sm:w-auto">
               <Button
                 variant={viewMode === "day" ? "health" : "outline"}
                 size="sm"
@@ -183,8 +183,8 @@ const AppointmentsPage = () => {
             </div>
           </div>
           <Button variant="outline" size="sm" className="w-full sm:w-auto">
-            <Filter className="h-4 w-4" />
-            <span className="ml-1">{t('appointments.filterByStatus')}</span>
+            <Filter className="h-4 w-4 mr-2" />
+            <span>{t('appointments.filterByStatus')}</span>
           </Button>
         </div>
 

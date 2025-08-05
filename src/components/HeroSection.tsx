@@ -33,9 +33,9 @@ const HeroSection = () => {
               </p>
             </div>
 
-            <div className="flex flex-col sm:flex-row gap-3 sm:gap-4">
+            <div className="flex flex-col gap-4 sm:flex-row sm:gap-4">
               <Button variant="health" size="mobile" className="sm:size-lg" onClick={handleStartMonitoring}>
-                <Heart className="h-5 w-5" />
+                <Heart className="h-5 w-5 mr-2" />
                 {t('hero.startMonitoring')}
               </Button>
               <Button variant="soft" size="mobile" className="sm:size-lg" onClick={handleLearnMore}>
@@ -43,7 +43,7 @@ const HeroSection = () => {
               </Button>
             </div>
 
-            <div className="grid grid-cols-3 gap-3 sm:gap-6 pt-6 sm:pt-8">
+            <div className="grid grid-cols-3 gap-4 sm:gap-6 pt-6 sm:pt-8">
               <div className="text-center">
                 <div className="bg-health-pink p-2 sm:p-3 rounded-lg w-fit mx-auto mb-1 sm:mb-2">
                   <Users className="h-4 w-4 sm:h-6 sm:w-6 text-primary" />

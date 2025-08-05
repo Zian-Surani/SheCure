@@ -44,6 +44,16 @@
   button, .clickable {
     min-height: 44px;
     min-width: 44px;
+    touch-action: manipulation;
+  }
+  
+  /* Better button spacing on mobile */
+  .button-group {
+    gap: 0.75rem;
+  }
+  
+  .button-group-mobile {
+    gap: 1rem;
   }
   
   /* Mobile grid optimizations */
@@ -161,6 +171,38 @@ All colors MUST be HSL.
     --sidebar-accent-foreground: 240 4.8% 95.9%;
     --sidebar-border: 240 3.7% 15.9%;
     --sidebar-ring: 217.2 91.2% 59.8%;
+  }
+}
+
+@layer components {
+  /* Better button spacing utilities */
+  .btn-group {
+    @apply flex gap-3;
+  }
+  
+  .btn-group-mobile {
+    @apply flex flex-col gap-3 sm:flex-row sm:gap-3;
+  }
+  
+  .btn-group-responsive {
+    @apply flex flex-col gap-3 sm:flex-row sm:gap-4;
+  }
+  
+  .btn-grid {
+    @apply grid gap-3;
+  }
+  
+  .btn-grid-2 {
+    @apply grid grid-cols-1 gap-3 sm:grid-cols-2 sm:gap-3;
+  }
+  
+  .btn-grid-3 {
+    @apply grid grid-cols-1 gap-3 sm:grid-cols-3 sm:gap-3;
+  }
+  
+  /* Mobile touch-friendly button sizing */
+  .btn-mobile {
+    @apply min-h-[44px] px-6 py-3 text-base;
   }
 }
 

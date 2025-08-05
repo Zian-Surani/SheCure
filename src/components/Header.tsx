@@ -61,14 +61,14 @@ const Header = () => {
             </a>
           </nav>
 
-          <div className="flex items-center space-x-1 sm:space-x-2 flex-shrink-0">
+          <div className="flex items-center gap-2 sm:gap-3 flex-shrink-0">
             <div className="hidden sm:block">
               <LanguageToggle />
             </div>
             {user && (
               <Button variant="soft" size="sm" onClick={handleSignOut} className="hidden sm:flex text-xs">
-                <LogOut className="h-3 w-3 sm:h-4 sm:w-4" />
-                <span className="hidden md:inline ml-1">{t('nav.signOut')}</span>
+                <LogOut className="h-3 w-3 sm:h-4 sm:w-4 mr-1" />
+                <span className="hidden md:inline">{t('nav.signOut')}</span>
               </Button>
             )}
             <div className="sm:hidden">
