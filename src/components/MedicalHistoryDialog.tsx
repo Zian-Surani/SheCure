@@ -85,9 +85,6 @@ const MedicalHistoryDialog = ({ open, onOpenChange, patientId, patientName }: Me
         <DialogHeader>
           <DialogTitle className="flex items-center justify-between">
             <span>Medical History - {patientName}</span>
-            <Button variant="ghost" size="sm" onClick={() => onOpenChange(false)}>
-              <X className="h-4 w-4" />
-            </Button>
           </DialogTitle>
         </DialogHeader>
         

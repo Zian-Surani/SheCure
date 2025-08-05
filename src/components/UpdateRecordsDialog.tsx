@@ -97,9 +97,6 @@ const UpdateRecordsDialog = ({ open, onOpenChange, patientId, patientName }: Upd
         <DialogHeader>
           <DialogTitle className="flex items-center justify-between">
             <span>Update Medical Record - {patientName}</span>
-            <Button variant="ghost" size="sm" onClick={() => onOpenChange(false)}>
-              <X className="h-4 w-4" />
-            </Button>
           </DialogTitle>
         </DialogHeader>
 

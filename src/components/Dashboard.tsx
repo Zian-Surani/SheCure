@@ -455,11 +455,8 @@ const Dashboard = () => {
       <Dialog open={showPatientDetails} onOpenChange={setShowPatientDetails}>
         <DialogContent className="max-w-2xl">
           <DialogHeader>
-            <DialogTitle className="flex items-center justify-between">
+            <DialogTitle>
               {t('dashboard.patientDetails')}
-              <Button variant="ghost" size="sm" onClick={() => setShowPatientDetails(false)}>
-                <X className="h-4 w-4" />
-              </Button>
             </DialogTitle>
           </DialogHeader>
           {selectedPatient && (
@@ -548,9 +545,6 @@ const Dashboard = () => {
               <Button variant="destructive" size="sm" className="flex-1">
                 <Phone className="h-4 w-4 mr-2" />
                 Call 108
-              </Button>
-              <Button variant="outline" size="sm" onClick={() => setShowEmergencyAlert(false)}>
-                Close
               </Button>
             </div>
           </div>
