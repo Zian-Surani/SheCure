@@ -159,6 +159,54 @@ export type Database = {
           },
         ]
       }
+      medical_history: {
+        Row: {
+          created_at: string
+          diagnosis: string | null
+          doctor_notes: string | null
+          follow_up_date: string | null
+          id: string
+          patient_id: string
+          patient_name: string
+          prescription: string | null
+          severity: string | null
+          treatment: string | null
+          updated_at: string
+          visit_date: string
+          vitals: Json | null
+        }
+        Insert: {
+          created_at?: string
+          diagnosis?: string | null
+          doctor_notes?: string | null
+          follow_up_date?: string | null
+          id?: string
+          patient_id: string
+          patient_name: string
+          prescription?: string | null
+          severity?: string | null
+          treatment?: string | null
+          updated_at?: string
+          visit_date?: string
+          vitals?: Json | null
+        }
+        Update: {
+          created_at?: string
+          diagnosis?: string | null
+          doctor_notes?: string | null
+          follow_up_date?: string | null
+          id?: string
+          patient_id?: string
+          patient_name?: string
+          prescription?: string | null
+          severity?: string | null
+          treatment?: string | null
+          updated_at?: string
+          visit_date?: string
+          vitals?: Json | null
+        }
+        Relationships: []
+      }
       patient_records: {
         Row: {
           created_at: string

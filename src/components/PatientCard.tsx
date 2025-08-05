@@ -14,9 +14,11 @@ interface PatientCardProps {
   status: "active" | "inactive" | "critical";
   onSchedule?: (patientId: string, patientName: string) => void;
   onViewDetails?: (patient: any) => void;
+  onViewMedicalHistory?: (patientId: string, patientName: string) => void;
+  onUpdateRecords?: (patientId: string, patientName: string) => void;
 }
 
-const PatientCard = ({ id, name, age, condition, lastVisit, location, phone, status, onSchedule, onViewDetails }: PatientCardProps) => {
+const PatientCard = ({ id, name, age, condition, lastVisit, location, phone, status, onSchedule, onViewDetails, onViewMedicalHistory, onUpdateRecords }: PatientCardProps) => {
   const statusColors = {
     active: "bg-health-success text-white",
     inactive: "bg-muted text-muted-foreground",
@@ -63,23 +65,41 @@ const PatientCard = ({ id, name, age, condition, lastVisit, location, phone, sta
         </div>
       </div>
 
-      <div className="flex space-x-2">
+      <div className="space-y-2">
         <Button 
           variant="health" 
           size="sm" 
-          className="flex-1"
+          className="w-full"
           onClick={() => onViewDetails?.({ id, name, age, condition, lastVisit, location, phone, status })}
         >
           View Details
         </Button>
-        <Button 
-          variant="soft" 
-          size="sm" 
-          className="flex-1"
-          onClick={() => id && onSchedule?.(id, name)}
-        >
-          Schedule
-        </Button>
+        <div className="grid grid-cols-3 gap-2">
+          <Button 
+            variant="soft" 
+            size="sm" 
+            className="text-xs"
+            onClick={() => id && onSchedule?.(id, name)}
+          >
+            Schedule
+          </Button>
+          <Button 
+            variant="outline" 
+            size="sm" 
+            className="text-xs"
+            onClick={() => id && onViewMedicalHistory?.(id, name)}
+          >
+            History
+          </Button>
+          <Button 
+            variant="outline" 
+            size="sm" 
+            className="text-xs"
+            onClick={() => id && onUpdateRecords?.(id, name)}
+          >
+            Update
+          </Button>
+        </div>
       </div>
     </Card>
   );

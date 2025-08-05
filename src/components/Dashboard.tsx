@@ -7,6 +7,8 @@ import PatientDetailCard from "@/components/PatientDetailCard";
 import VaccinationSchedule from "@/components/VaccinationSchedule";
 import AddPatientDialog from "@/components/AddPatientDialog";
 import AppointmentDialog from "@/components/AppointmentDialog";
+import MedicalHistoryDialog from "@/components/MedicalHistoryDialog";
+import UpdateRecordsDialog from "@/components/UpdateRecordsDialog";
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
 import { useLanguage } from "@/hooks/useLanguage";
@@ -23,6 +25,10 @@ const Dashboard = () => {
   const [showAppointment, setShowAppointment] = useState(false);
   const [stats, setStats] = useState([]);
   const [showEmergencyAlert, setShowEmergencyAlert] = useState(false);
+  const [showMedicalHistory, setShowMedicalHistory] = useState(false);
+  const [showUpdateRecords, setShowUpdateRecords] = useState(false);
+  const [selectedPatientForHistory, setSelectedPatientForHistory] = useState<{id: string, name: string} | null>(null);
+  const [selectedPatientForUpdate, setSelectedPatientForUpdate] = useState<{id: string, name: string} | null>(null);
 
   // Sample patient data when database is empty
   const samplePatients = [

@@ -9,6 +9,8 @@ import PatientCard from "@/components/PatientCard";
 import PatientDetailCard from "@/components/PatientDetailCard";
 import AddPatientDialog from "@/components/AddPatientDialog";
 import AppointmentDialog from "@/components/AppointmentDialog";
+import MedicalHistoryDialog from "@/components/MedicalHistoryDialog";
+import UpdateRecordsDialog from "@/components/UpdateRecordsDialog";
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
 import { useLanguage } from "@/hooks/useLanguage";
@@ -36,6 +38,10 @@ const PatientsPage = () => {
   const [selectedPatient, setSelectedPatient] = useState<{ id: string; name: string } | null>(null);
   const [selectedPatientDetails, setSelectedPatientDetails] = useState<any>(null);
   const [showPatientPopup, setShowPatientPopup] = useState(false);
+  const [showMedicalHistory, setShowMedicalHistory] = useState(false);
+  const [showUpdateRecords, setShowUpdateRecords] = useState(false);
+  const [medicalHistoryPatient, setMedicalHistoryPatient] = useState<{ id: string; name: string } | null>(null);
+  const [updateRecordsPatient, setUpdateRecordsPatient] = useState<{ id: string; name: string } | null>(null);
   const { toast } = useToast();
   const { t } = useLanguage();
 
@@ -116,6 +122,16 @@ const PatientsPage = () => {
   const handleScheduleAppointment = (patientId: string, patientName: string) => {
     setSelectedPatient({ id: patientId, name: patientName });
     setShowAppointmentDialog(true);
+  };
+
+  const handleViewMedicalHistory = (patientId: string, patientName: string) => {
+    setMedicalHistoryPatient({ id: patientId, name: patientName });
+    setShowMedicalHistory(true);
+  };
+
+  const handleUpdateRecords = (patientId: string, patientName: string) => {
+    setUpdateRecordsPatient({ id: patientId, name: patientName });
+    setShowUpdateRecords(true);
   };
 
   const staticDetailedPatients = [
@@ -286,17 +302,17 @@ const PatientsPage = () => {
     <div className="min-h-screen bg-background">
       <Header />
       <div className="container mx-auto px-4 py-8">
-        <div className="flex items-center justify-between mb-8">
+        <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between mb-6 sm:mb-8">
           <div>
-            <h1 className="text-3xl font-bold text-foreground">{t('nav.patients')}</h1>
-            <p className="text-muted-foreground">Manage and monitor all patient health records</p>
+            <h1 className="text-2xl sm:text-3xl font-bold text-foreground">{t('nav.patients')}</h1>
+            <p className="text-sm sm:text-base text-muted-foreground">Manage and monitor all patient health records</p>
           </div>
-          <div className="flex space-x-3">
-            <Button variant="soft" onClick={exportData}>
+          <div className="flex flex-col sm:flex-row space-y-2 sm:space-y-0 sm:space-x-3">
+            <Button variant="soft" onClick={exportData} className="w-full sm:w-auto">
               <Download className="h-4 w-4" />
               {t('common.export')}
             </Button>
-            <Button variant="health" onClick={() => setShowAddDialog(true)}>
+            <Button variant="health" onClick={() => setShowAddDialog(true)} className="w-full sm:w-auto">
               <Plus className="h-4 w-4" />
               {t('patients.addPatient')}
             </Button>
@@ -304,8 +320,8 @@ const PatientsPage = () => {
         </div>
 
         {/* Search and Filter Bar */}
-        <div className="flex flex-col md:flex-row gap-4 mb-8">
-          <div className="relative flex-1">
+        <div className="flex flex-col gap-4 mb-6 sm:mb-8">
+          <div className="relative">
             <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
             <Input
               placeholder={t('patients.searchPlaceholder')}
@@ -314,11 +330,12 @@ const PatientsPage = () => {
               className="pl-10"
             />
           </div>
-          <div className="flex space-x-2">
+          <div className="flex flex-wrap gap-2">
             <Button
               variant={selectedFilter === "all" ? "health" : "outline"}
               size="sm"
               onClick={() => setSelectedFilter("all")}
+              className="flex-1 sm:flex-none"
             >
               {t('patients.allPatients')}
             </Button>
@@ -326,6 +343,7 @@ const PatientsPage = () => {
               variant={selectedFilter === "active" ? "health" : "outline"}
               size="sm"
               onClick={() => setSelectedFilter("active")}
+              className="flex-1 sm:flex-none"
             >
               {t('patients.active')}
             </Button>
@@ -333,12 +351,13 @@ const PatientsPage = () => {
               variant={selectedFilter === "critical" ? "health" : "outline"}
               size="sm"
               onClick={() => setSelectedFilter("critical")}
+              className="flex-1 sm:flex-none"
             >
               {t('patients.critical')}
             </Button>
-            <Button variant="outline" size="sm">
+            <Button variant="outline" size="sm" className="flex-1 sm:flex-none">
               <Filter className="h-4 w-4" />
-              {t('patients.moreFilters')}
+              <span className="hidden sm:inline ml-1">{t('patients.moreFilters')}</span>
             </Button>
           </div>
         </div>
@@ -351,7 +370,7 @@ const PatientsPage = () => {
           </div>
         ) : (
           /* Patient Grid */
-          <div className="grid lg:grid-cols-3 gap-8">
+          <div className="grid gap-6 lg:gap-8 lg:grid-cols-3">
             <div className="lg:col-span-2">
               <div className="grid gap-4">
                 {filteredPatients.length > 0 ? (
@@ -361,6 +380,8 @@ const PatientsPage = () => {
                       {...patient} 
                       onSchedule={handleScheduleAppointment}
                       onViewDetails={handleViewDetails}
+                      onViewMedicalHistory={handleViewMedicalHistory}
+                      onUpdateRecords={handleUpdateRecords}
                     />
                   ))
                 ) : (
@@ -440,37 +461,34 @@ const PatientsPage = () => {
 
         {/* Enhanced Patient Details Popup */}
         <Dialog open={showPatientPopup} onOpenChange={setShowPatientPopup}>
-          <DialogContent className="max-w-4xl max-h-[80vh] overflow-y-auto">
+          <DialogContent className="max-w-4xl max-h-[90vh] overflow-y-auto">
             <DialogHeader>
               <DialogTitle className="flex items-center justify-between">
                 <span>Patient Details</span>
-                <Button variant="ghost" size="sm" onClick={() => setShowPatientPopup(false)}>
-                  <X className="h-4 w-4" />
-                </Button>
               </DialogTitle>
             </DialogHeader>
             {selectedPatientDetails && (
               <div className="space-y-6">
                 {/* Patient Basic Info */}
-                <div className="grid md:grid-cols-2 gap-6">
-                  <Card className="p-6 bg-gradient-card">
+                <div className="grid gap-6 md:grid-cols-2">
+                  <Card className="p-4 sm:p-6 bg-gradient-card">
                     <h4 className="text-lg font-semibold text-foreground mb-4">Patient Information</h4>
                     <div className="space-y-3">
-                      <div className="flex justify-between items-center">
+                      <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-1">
                         <span className="text-sm font-medium text-muted-foreground">Name:</span>
                         <span className="text-sm font-semibold text-foreground">{selectedPatientDetails.name}</span>
                       </div>
-                      <div className="flex justify-between items-center">
+                      <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-1">
                         <span className="text-sm font-medium text-muted-foreground">Age:</span>
                         <span className="text-sm font-semibold text-foreground">{selectedPatientDetails.age} years</span>
                       </div>
-                      <div className="flex justify-between items-center">
+                      <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-1">
                         <span className="text-sm font-medium text-muted-foreground">Phone:</span>
                         <span className="text-sm font-semibold text-foreground">{selectedPatientDetails.phone}</span>
                       </div>
-                      <div className="flex justify-between items-center">
+                      <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-1">
                         <span className="text-sm font-medium text-muted-foreground">Status:</span>
-                        <span className={`px-2 py-1 rounded-full text-xs font-medium ${
+                        <span className={`px-2 py-1 rounded-full text-xs font-medium w-fit ${
                           selectedPatientDetails.status === 'active' ? 'bg-health-success text-white' :
                           selectedPatientDetails.status === 'critical' ? 'bg-destructive text-destructive-foreground' :
                           'bg-muted text-muted-foreground'
@@ -565,10 +583,16 @@ const PatientsPage = () => {
                   }}>
                     Schedule Appointment
                   </Button>
-                  <Button variant="soft" size="sm">
+                  <Button variant="soft" size="sm" onClick={() => {
+                    setShowPatientPopup(false);
+                    handleViewMedicalHistory(selectedPatientDetails.id, selectedPatientDetails.name);
+                  }}>
                     View Medical History
                   </Button>
-                  <Button variant="outline" size="sm">
+                  <Button variant="outline" size="sm" onClick={() => {
+                    setShowPatientPopup(false);
+                    handleUpdateRecords(selectedPatientDetails.id, selectedPatientDetails.name);
+                  }}>
                     Update Records
                   </Button>
                   <Button variant="outline" size="sm">
@@ -582,6 +606,26 @@ const PatientsPage = () => {
             )}
           </DialogContent>
         </Dialog>
+
+        {/* Medical History Dialog */}
+        {medicalHistoryPatient && (
+          <MedicalHistoryDialog
+            open={showMedicalHistory}
+            onOpenChange={setShowMedicalHistory}
+            patientId={medicalHistoryPatient.id}
+            patientName={medicalHistoryPatient.name}
+          />
+        )}
+
+        {/* Update Records Dialog */}
+        {updateRecordsPatient && (
+          <UpdateRecordsDialog
+            open={showUpdateRecords}
+            onOpenChange={setShowUpdateRecords}
+            patientId={updateRecordsPatient.id}
+            patientName={updateRecordsPatient.name}
+          />
+        )}
       </div>
     </div>
   );

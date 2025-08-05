@@ -1,10 +1,11 @@
-import { Menu, User, LogOut } from "lucide-react";
+import { User, LogOut } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useAuth } from "@/hooks/useAuth";
 import { useNavigate } from "react-router-dom";
 import { useToast } from "@/hooks/use-toast";
 import { useLanguage } from "@/hooks/useLanguage";
 import LanguageToggle from "@/components/LanguageToggle";
+import MobileMenu from "@/components/MobileMenu";
 
 const Header = () => {
   const { user, signOut } = useAuth();
@@ -73,9 +74,7 @@ const Header = () => {
             <div className="sm:hidden">
               <LanguageToggle />
             </div>
-            <Button variant="ghost" size="icon" className="lg:hidden p-1.5 sm:p-2">
-              <Menu className="h-4 w-4 sm:h-5 sm:w-5" />
-            </Button>
+            <MobileMenu />
           </div>
         </div>
       </div>

@@ -45,6 +45,17 @@
     min-height: 44px;
     min-width: 44px;
   }
+  
+  /* Mobile grid optimizations */
+  .mobile-grid {
+    grid-template-columns: 1fr !important;
+    gap: 1rem !important;
+  }
+  
+  /* Mobile text sizing */
+  .mobile-text-responsive {
+    font-size: 0.875rem !important;
+  }
 }
 
 /* Landscape mobile orientation */
