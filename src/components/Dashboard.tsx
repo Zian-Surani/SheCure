@@ -171,8 +171,21 @@ const Dashboard = () => {
     setShowAddPatient(true);
   };
 
-  const handleScheduleAppointment = () => {
+  const handleScheduleAppointment = (patientId?: string, patientName?: string) => {
+    if (patientId && patientName) {
+      setSelectedPatient({ id: patientId, name: patientName });
+    }
     setShowAppointment(true);
+  };
+
+  const handleViewMedicalHistory = (patientId: string, patientName: string) => {
+    setSelectedPatientForHistory({ id: patientId, name: patientName });
+    setShowMedicalHistory(true);
+  };
+
+  const handleUpdateRecords = (patientId: string, patientName: string) => {
+    setSelectedPatientForUpdate({ id: patientId, name: patientName });
+    setShowUpdateRecords(true);
   };
 
   const handleGenerateReport = () => {
@@ -375,7 +388,7 @@ const Dashboard = () => {
                 <span className="text-sm font-medium text-primary">{t('dashboard.addNewPatient')}</span>
               </button>
               <button 
-                onClick={handleScheduleAppointment}
+                onClick={() => handleScheduleAppointment()}
                 className="w-full text-left p-3 rounded-lg bg-health-pink hover:bg-health-pink/80 transition-colors"
               >
                 <span className="text-sm font-medium text-primary">{t('dashboard.scheduleAppointment')}</span>
@@ -473,13 +486,19 @@ const Dashboard = () => {
               <div>
                 <h5 className="font-semibold text-foreground mb-2">{t('dashboard.quickActions')}</h5>
                 <div className="space-y-2">
-                  <Button variant="health" size="sm" className="w-full" onClick={handleScheduleAppointment}>
+                  <Button variant="health" size="sm" className="w-full" onClick={() => handleScheduleAppointment(selectedPatient?.id, selectedPatient?.name)}>
                     {t('dashboard.scheduleAppointment')}
                   </Button>
-                  <Button variant="soft" size="sm" className="w-full">
+                  <Button variant="soft" size="sm" className="w-full" onClick={() => {
+                    setShowPatientDetails(false);
+                    handleViewMedicalHistory(selectedPatient.id, selectedPatient.name);
+                  }}>
                     {t('dashboard.viewMedicalHistory')}
                   </Button>
-                  <Button variant="outline" size="sm" className="w-full">
+                  <Button variant="outline" size="sm" className="w-full" onClick={() => {
+                    setShowPatientDetails(false);
+                    handleUpdateRecords(selectedPatient.id, selectedPatient.name);
+                  }}>
                     {t('dashboard.updateRecords')}
                   </Button>
                 </div>
@@ -537,6 +556,26 @@ const Dashboard = () => {
           </div>
         </DialogContent>
       </Dialog>
+
+      {/* Medical History Dialog */}
+      {selectedPatientForHistory && (
+        <MedicalHistoryDialog
+          open={showMedicalHistory}
+          onOpenChange={setShowMedicalHistory}
+          patientId={selectedPatientForHistory.id}
+          patientName={selectedPatientForHistory.name}
+        />
+      )}
+
+      {/* Update Records Dialog */}
+      {selectedPatientForUpdate && (
+        <UpdateRecordsDialog
+          open={showUpdateRecords}
+          onOpenChange={setShowUpdateRecords}
+          patientId={selectedPatientForUpdate.id}
+          patientName={selectedPatientForUpdate.name}
+        />
+      )}
     </div>
   );
 };

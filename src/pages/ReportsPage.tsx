@@ -234,35 +234,35 @@ const ReportsPage = () => {
     <div className="min-h-screen bg-background">
       <Header />
       <div className="container mx-auto px-4 py-8">
-        <div className="flex items-center justify-between mb-8">
+        <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between mb-6 sm:mb-8">
           <div>
-            <h1 className="text-3xl font-bold text-foreground">{t('nav.reports')}</h1>
-            <p className="text-muted-foreground">Generated health analytics and performance reports</p>
+            <h1 className="text-2xl sm:text-3xl font-bold text-foreground">{t('nav.reports')}</h1>
+            <p className="text-sm sm:text-base text-muted-foreground">Generated health analytics and performance reports</p>
           </div>
-          <div className="flex space-x-3">
-            <Button variant="soft" onClick={scheduleReport} disabled={loading}>
+          <div className="flex flex-col sm:flex-row space-y-2 sm:space-y-0 sm:space-x-3">
+            <Button variant="soft" onClick={scheduleReport} disabled={loading} className="w-full sm:w-auto">
               {loading ? <Loader2 className="h-4 w-4 animate-spin" /> : <Calendar className="h-4 w-4" />}
-              {t('common.scheduleReport')}
+              <span className="ml-1">{t('common.scheduleReport')}</span>
             </Button>
-            <Button variant="health" onClick={generateReport} disabled={loading}>
+            <Button variant="health" onClick={generateReport} disabled={loading} className="w-full sm:w-auto">
               {loading ? <Loader2 className="h-4 w-4 animate-spin" /> : <FileText className="h-4 w-4" />}
-              {t('common.generateReport')}
+              <span className="ml-1">{t('common.generateReport')}</span>
             </Button>
           </div>
         </div>
 
         {/* Dashboard Stats */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6 mb-6 sm:mb-8">
           {dashboardStats.map((stat, index) => (
-            <Card key={index} className="p-6 shadow-card bg-gradient-card">
+            <Card key={index} className="p-4 sm:p-6 shadow-card bg-gradient-card">
               <div className="flex items-center justify-between">
-                <div>
-                  <p className="text-sm text-muted-foreground font-medium">{stat.title}</p>
-                  <p className="text-2xl font-bold text-foreground mt-1">{stat.value}</p>
-                  <p className="text-sm text-muted-foreground mt-1">{stat.change}</p>
+                <div className="flex-1 min-w-0">
+                  <p className="text-xs sm:text-sm text-muted-foreground font-medium truncate">{stat.title}</p>
+                  <p className="text-xl sm:text-2xl font-bold text-foreground mt-1">{stat.value}</p>
+                  <p className="text-xs sm:text-sm text-muted-foreground mt-1 truncate">{stat.change}</p>
                 </div>
-                <div className="bg-primary-soft p-3 rounded-lg">
-                  <stat.icon className={`h-6 w-6 ${stat.color}`} />
+                <div className="bg-primary-soft p-2 sm:p-3 rounded-lg flex-shrink-0">
+                  <stat.icon className={`h-5 w-5 sm:h-6 sm:w-6 ${stat.color}`} />
                 </div>
               </div>
             </Card>
@@ -270,7 +270,7 @@ const ReportsPage = () => {
         </div>
 
         {/* Filters */}
-        <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-8 space-y-4 md:space-y-0">
+        <div className="flex flex-col gap-4 mb-6 sm:mb-8">
           <div className="flex flex-wrap gap-2">
             {reportCategories.map((category) => (
               <Button
@@ -278,72 +278,73 @@ const ReportsPage = () => {
                 variant={selectedCategory === category.id ? "health" : "outline"}
                 size="sm"
                 onClick={() => setSelectedCategory(category.id)}
+                className="flex-1 sm:flex-none text-xs sm:text-sm"
               >
                 {category.name} ({category.count})
               </Button>
             ))}
           </div>
-          <div className="flex space-x-2">
+          <div className="flex flex-col sm:flex-row gap-2">
             <select
               value={selectedPeriod}
               onChange={(e) => setSelectedPeriod(e.target.value)}
-              className="px-3 py-2 border rounded-lg bg-background text-foreground text-sm"
+              className="px-3 py-2 border rounded-lg bg-background text-foreground text-sm flex-1 sm:flex-none"
             >
               <option value="weekly">Weekly</option>
               <option value="monthly">Monthly</option>
               <option value="quarterly">Quarterly</option>
               <option value="yearly">Yearly</option>
             </select>
-            <Button variant="outline" size="sm">
+            <Button variant="outline" size="sm" className="w-full sm:w-auto">
               <Filter className="h-4 w-4" />
-              More Filters
+              <span className="hidden sm:inline ml-1">More Filters</span>
             </Button>
           </div>
         </div>
 
         {/* Reports Grid */}
-        <div className="grid gap-6">
+        <div className="grid gap-4 sm:gap-6">
           {filteredReports.map((report) => (
-            <Card key={report.id} className="p-6 hover:shadow-card transition-all duration-300 bg-gradient-card">
-              <div className="flex items-start justify-between mb-4">
-                <div className="flex-1">
-                  <div className="flex items-center space-x-3 mb-2">
-                    <h3 className="text-lg font-semibold text-foreground">{report.title}</h3>
-                    <span className={`px-2 py-1 rounded-full text-xs font-medium ${getStatusColor(report.status)}`}>
+            <Card key={report.id} className="p-4 sm:p-6 hover:shadow-card transition-all duration-300 bg-gradient-card">
+              <div className="flex flex-col sm:flex-row sm:items-start justify-between mb-4 gap-4">
+                <div className="flex-1 min-w-0">
+                  <div className="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-3 mb-2">
+                    <h3 className="text-base sm:text-lg font-semibold text-foreground">{report.title}</h3>
+                    <span className={`px-2 py-1 rounded-full text-xs font-medium w-fit ${getStatusColor(report.status)}`}>
                       {report.status.charAt(0).toUpperCase() + report.status.slice(1)}
                     </span>
                   </div>
-                  <div className="flex items-center space-x-4 text-sm text-muted-foreground mb-3">
-                    <span className="bg-primary-soft px-2 py-1 rounded text-primary font-medium">
+                  <div className="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-4 text-xs sm:text-sm text-muted-foreground mb-3">
+                    <span className="bg-primary-soft px-2 py-1 rounded text-primary font-medium w-fit">
                       {report.type}
                     </span>
                     <span>Period: {report.period}</span>
-                    <span>Generated: {new Date(report.generatedDate).toLocaleDateString('en-IN')}</span>
+                    <span className="hidden sm:inline">Generated: {new Date(report.generatedDate).toLocaleDateString('en-IN')}</span>
                   </div>
-                  <p className="text-muted-foreground text-sm">{report.summary}</p>
+                  <p className="text-muted-foreground text-xs sm:text-sm line-clamp-2">{report.summary}</p>
                 </div>
-                <div className="flex space-x-2 ml-4">
-                  <Button variant="soft" size="sm" onClick={() => downloadReport(report.id, report.title)}>
+                <div className="flex flex-col sm:flex-row gap-2">
+                  <Button variant="soft" size="sm" onClick={() => downloadReport(report.id, report.title)} className="w-full sm:w-auto">
                     <Download className="h-4 w-4" />
-                    Download
+                    <span className="sm:hidden md:inline ml-1">Download</span>
                   </Button>
                   <Button variant="outline" size="sm" onClick={() => {
                     setSelectedReport(report);
                     setShowReportDetails(true);
-                  }}>
-                    View Details
+                  }} className="w-full sm:w-auto">
+                    <span className="text-xs sm:text-sm">View Details</span>
                   </Button>
                 </div>
               </div>
 
               {/* Key Metrics */}
               <div className="border-t pt-4">
-                <h4 className="font-medium text-foreground mb-3">Key Metrics</h4>
-                <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+                <h4 className="font-medium text-foreground mb-3 text-sm sm:text-base">Key Metrics</h4>
+                <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">
                   {formatMetrics(report.keyMetrics).map((metric, index) => (
-                    <div key={index} className="bg-background p-3 rounded-lg border">
-                      <div className="text-lg font-bold text-foreground">{metric.value}</div>
-                      <div className="text-xs text-muted-foreground">{metric.label}</div>
+                    <div key={index} className="bg-background p-2 sm:p-3 rounded-lg border">
+                      <div className="text-sm sm:text-lg font-bold text-foreground">{metric.value}</div>
+                      <div className="text-xs text-muted-foreground line-clamp-1">{metric.label}</div>
                     </div>
                   ))}
                 </div>
@@ -353,13 +354,13 @@ const ReportsPage = () => {
         </div>
 
         {/* Quick Actions */}
-        <Card className="mt-8 p-6 bg-gradient-primary text-white">
-          <div className="flex items-center justify-between">
+        <Card className="mt-6 sm:mt-8 p-4 sm:p-6 bg-gradient-primary text-white">
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
             <div>
-              <h3 className="text-xl font-semibold mb-2">Need a Custom Report?</h3>
-              <p className="text-white/90">Generate specific reports based on your requirements with our advanced analytics engine.</p>
+              <h3 className="text-lg sm:text-xl font-semibold mb-2">Need a Custom Report?</h3>
+              <p className="text-white/90 text-sm sm:text-base">Generate specific reports based on your requirements with our advanced analytics engine.</p>
             </div>
-            <Button variant="secondary" className="bg-white text-primary hover:bg-white/90">
+            <Button variant="secondary" className="bg-white text-primary hover:bg-white/90 w-full sm:w-auto">
               Create Custom Report
             </Button>
           </div>
@@ -367,13 +368,13 @@ const ReportsPage = () => {
 
         {/* Report Details Dialog */}
         <Dialog open={showReportDetails} onOpenChange={setShowReportDetails}>
-          <DialogContent className="max-w-4xl">
+          <DialogContent className="max-w-4xl max-h-[90vh] overflow-y-auto">
             <DialogHeader>
               <DialogTitle>Report Details</DialogTitle>
             </DialogHeader>
             {selectedReport && (
               <div className="space-y-6">
-                <div className="grid grid-cols-2 gap-6">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                   <div>
                     <h4 className="font-semibold text-foreground mb-2">Report Information</h4>
                     <div className="space-y-2 text-sm">
@@ -398,25 +399,25 @@ const ReportsPage = () => {
 
                 <div>
                   <h4 className="font-semibold text-foreground mb-4">Key Metrics</h4>
-                  <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+                  <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
                     {formatMetrics(selectedReport.keyMetrics).map((metric, index) => (
                       <Card key={index} className="p-4 bg-gradient-card">
-                        <div className="text-2xl font-bold text-primary">{metric.value}</div>
-                        <div className="text-sm text-muted-foreground">{metric.label}</div>
+                        <div className="text-xl sm:text-2xl font-bold text-primary">{metric.value}</div>
+                        <div className="text-xs sm:text-sm text-muted-foreground">{metric.label}</div>
                       </Card>
                     ))}
                   </div>
                 </div>
 
-                <div className="flex space-x-2 pt-4">
-                  <Button variant="health" size="sm" onClick={() => downloadReport(selectedReport.id, selectedReport.title)}>
+                <div className="flex flex-wrap gap-2 pt-4">
+                  <Button variant="health" size="sm" onClick={() => downloadReport(selectedReport.id, selectedReport.title)} className="flex-1 sm:flex-none">
                     <Download className="h-4 w-4 mr-2" />
                     Download Report
                   </Button>
-                  <Button variant="soft" size="sm">
+                  <Button variant="soft" size="sm" className="flex-1 sm:flex-none">
                     Schedule Similar Report
                   </Button>
-                  <Button variant="outline" size="sm" onClick={() => setShowReportDetails(false)}>
+                  <Button variant="outline" size="sm" onClick={() => setShowReportDetails(false)} className="flex-1 sm:flex-none">
                     Close
                   </Button>
                 </div>
