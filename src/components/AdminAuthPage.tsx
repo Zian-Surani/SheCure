@@ -33,12 +33,26 @@ const AdminAuthPage = () => {
     setLoading(true);
 
     try {
-      const { error } = await supabase.auth.signInWithPassword({
+      const { data, error } = await supabase.auth.signInWithPassword({
         email,
         password,
       });
 
       if (error) throw error;
+
+      // Check if user has admin role
+      const { data: roleData, error: roleError } = await supabase
+        .from("user_roles")
+        .select("role")
+        .eq("user_id", data.user.id)
+        .eq("role", "admin")
+        .single();
+
+      if (roleError || !roleData) {
+        // Sign out if user is not an admin
+        await supabase.auth.signOut();
+        throw new Error("Access denied. Admin privileges required.");
+      }
 
       toast({
         title: "Admin Login Successful",

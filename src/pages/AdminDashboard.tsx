@@ -38,8 +38,41 @@ const AdminDashboard = () => {
       navigate("/");
       return;
     }
-    fetchPatients();
+    // Check if user has admin role
+    checkAdminRole();
   }, [user, navigate]);
+
+  const checkAdminRole = async () => {
+    try {
+      const { data: roleData, error: roleError } = await supabase
+        .from("user_roles")
+        .select("role")
+        .eq("user_id", user?.id)
+        .eq("role", "admin")
+        .single();
+
+      if (roleError || !roleData) {
+        toast({
+          title: "Access Denied",
+          description: "Admin privileges required to access this page.",
+          variant: "destructive",
+        });
+        navigate("/");
+        return;
+      }
+      
+      fetchPatients();
+    } catch (error: any) {
+      toast({
+        title: "Error checking permissions",
+        description: error.message,
+        variant: "destructive",
+      });
+      navigate("/");
+    } finally {
+      setLoading(false);
+    }
+  };
 
   useEffect(() => {
     if (patients.length > 0) {

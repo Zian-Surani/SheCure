@@ -9,7 +9,7 @@ import ProtectedRoute from "@/components/ProtectedRoute";
 import Index from "./pages/Index";
 import AuthPage from "./components/AuthPage";
 import AdminAuthPage from "./components/AdminAuthPage";
-import AdminDashboard from "./pages/AdminDashboard";
+import AdminRoleManager from "./pages/AdminRoleManager";
 import DashboardPage from "./pages/DashboardPage";
 import PatientsPage from "./pages/PatientsPage";
 import AppointmentsPage from "./pages/AppointmentsPage";
@@ -30,7 +30,7 @@ const App = () => (
             <Route path="/" element={<Index />} />
             <Route path="/auth" element={<AuthPage />} />
             <Route path="/admin-auth" element={<AdminAuthPage />} />
-            <Route path="/admin-dashboard" element={<AdminDashboard />} />
+            <Route path="/admin-role-manager" element={<AdminRoleManager />} />
             <Route path="/dashboard" element={<DashboardPage />} />
             <Route path="/patients" element={<PatientsPage />} />
             <Route path="/appointments" element={<AppointmentsPage />} />
