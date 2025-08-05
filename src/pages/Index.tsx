@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
@@ -6,6 +7,7 @@ import HeroSection from "@/components/HeroSection";
 import FeatureCard from "@/components/FeatureCard";
 import DeveloperCard from "@/components/DeveloperCard";
 import LanguageToggle from "@/components/LanguageToggle";
+import LoginTypeDialog from "@/components/LoginTypeDialog";
 import { useLanguage } from "@/hooks/useLanguage";
 import { 
   Heart, 
@@ -20,6 +22,7 @@ import {
 
 const Index = () => {
   const { t, setLanguage } = useLanguage();
+  const [showLoginDialog, setShowLoginDialog] = useState(false);
 
   const features = [
     {
@@ -103,11 +106,14 @@ const Index = () => {
               <div className="sm:hidden">
                 <LanguageToggle onLanguageChange={setLanguage} />
               </div>
-              <Link to="/auth">
-                <Button variant="health" size="sm" className="text-xs sm:text-sm px-3 sm:px-4">
-                  {t('nav.login')}
-                </Button>
-              </Link>
+              <Button 
+                variant="health" 
+                size="sm" 
+                className="text-xs sm:text-sm px-3 sm:px-4"
+                onClick={() => setShowLoginDialog(true)}
+              >
+                {t('nav.login')}
+              </Button>
             </div>
           </div>
         </div>
@@ -188,6 +194,12 @@ const Index = () => {
           </p>
         </div>
       </footer>
+
+      {/* Login Type Dialog */}
+      <LoginTypeDialog 
+        open={showLoginDialog} 
+        onOpenChange={setShowLoginDialog} 
+      />
     </div>
   );
 };

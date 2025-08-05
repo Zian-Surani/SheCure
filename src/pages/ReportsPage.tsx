@@ -239,14 +239,14 @@ const ReportsPage = () => {
             <h1 className="text-2xl sm:text-3xl font-bold text-foreground">{t('nav.reports')}</h1>
             <p className="text-sm sm:text-base text-muted-foreground">Generated health analytics and performance reports</p>
           </div>
-          <div className="flex flex-col sm:flex-row space-y-2 sm:space-y-0 sm:space-x-3">
-            <Button variant="soft" onClick={scheduleReport} disabled={loading} className="w-full sm:w-auto">
+          <div className="flex flex-col gap-2 sm:flex-row sm:space-x-3">
+            <Button variant="soft" onClick={scheduleReport} disabled={loading} className="w-full sm:w-auto whitespace-nowrap">
               {loading ? <Loader2 className="h-4 w-4 animate-spin" /> : <Calendar className="h-4 w-4" />}
-              <span className="ml-1">{t('common.scheduleReport')}</span>
+              <span className="ml-2">{t('common.scheduleReport')}</span>
             </Button>
-            <Button variant="health" onClick={generateReport} disabled={loading} className="w-full sm:w-auto">
+            <Button variant="health" onClick={generateReport} disabled={loading} className="w-full sm:w-auto whitespace-nowrap">
               {loading ? <Loader2 className="h-4 w-4 animate-spin" /> : <FileText className="h-4 w-4" />}
-              <span className="ml-1">{t('common.generateReport')}</span>
+              <span className="ml-2">{t('common.generateReport')}</span>
             </Button>
           </div>
         </div>
@@ -271,14 +271,14 @@ const ReportsPage = () => {
 
         {/* Filters */}
         <div className="flex flex-col gap-4 mb-6 sm:mb-8">
-          <div className="flex flex-wrap gap-2">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-2">
             {reportCategories.map((category) => (
               <Button
                 key={category.id}
                 variant={selectedCategory === category.id ? "health" : "outline"}
                 size="sm"
                 onClick={() => setSelectedCategory(category.id)}
-                className="flex-1 sm:flex-none text-xs sm:text-sm"
+                className="w-full text-xs sm:text-sm whitespace-nowrap"
               >
                 {category.name} ({category.count})
               </Button>
@@ -323,15 +323,15 @@ const ReportsPage = () => {
                   </div>
                   <p className="text-muted-foreground text-xs sm:text-sm line-clamp-2">{report.summary}</p>
                 </div>
-                <div className="flex flex-col sm:flex-row gap-2">
-                  <Button variant="soft" size="sm" onClick={() => downloadReport(report.id, report.title)} className="w-full sm:w-auto">
+                <div className="flex flex-col gap-2 sm:flex-row">
+                  <Button variant="soft" size="sm" onClick={() => downloadReport(report.id, report.title)} className="w-full sm:w-auto whitespace-nowrap">
                     <Download className="h-4 w-4" />
-                    <span className="sm:hidden md:inline ml-1">Download</span>
+                    <span className="ml-2">Download</span>
                   </Button>
                   <Button variant="outline" size="sm" onClick={() => {
                     setSelectedReport(report);
                     setShowReportDetails(true);
-                  }} className="w-full sm:w-auto">
+                  }} className="w-full sm:w-auto whitespace-nowrap">
                     <span className="text-xs sm:text-sm">View Details</span>
                   </Button>
                 </div>
@@ -416,9 +416,6 @@ const ReportsPage = () => {
                   </Button>
                   <Button variant="soft" size="sm" className="flex-1 sm:flex-none">
                     Schedule Similar Report
-                  </Button>
-                  <Button variant="outline" size="sm" onClick={() => setShowReportDetails(false)} className="flex-1 sm:flex-none">
-                    Close
                   </Button>
                 </div>
               </div>

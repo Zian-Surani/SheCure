@@ -66,11 +66,41 @@ export const useTranslation = () => {
     const translatedPatient = { ...patient };
     
     try {
+      // Translate condition
       if (patient.condition) {
         translatedPatient.condition = await translateText(patient.condition);
       }
+      
+      // Translate notes
       if (patient.notes) {
         translatedPatient.notes = await translateText(patient.notes);
+      }
+      
+      // Translate name (if it appears to be in English)
+      if (patient.name && /^[a-zA-Z\s]+$/.test(patient.name)) {
+        translatedPatient.name = await translateText(patient.name);
+      }
+      
+      // Translate address
+      if (patient.address) {
+        translatedPatient.address = await translateText(patient.address);
+      }
+      
+      // Translate location
+      if (patient.location) {
+        translatedPatient.location = await translateText(patient.location);
+      }
+      
+      // Translate status to Hindi equivalents
+      if (patient.status) {
+        const statusTranslations: { [key: string]: string } = {
+          'active': 'सक्रिय',
+          'critical': 'गंभीर',
+          'inactive': 'निष्क्रिय',
+          'pending': 'लंबित',
+          'completed': 'पूर्ण'
+        };
+        translatedPatient.status = statusTranslations[patient.status.toLowerCase()] || patient.status;
       }
     } catch (error) {
       console.error('Error translating patient data:', error);
