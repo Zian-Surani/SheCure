@@ -7,6 +7,20 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/u
 import Header from "@/components/Header";
 import AppointmentDialog from "@/components/AppointmentDialog";
 import { useLanguage } from "@/hooks/useLanguage";
+import { useToast } from "@/hooks/use-toast";
+import { supabase } from "@/integrations/supabase/client";
+
+interface Appointment {
+  id: string;
+  patientName: string;
+  time: string;
+  duration: string;
+  type: string;
+  location: string;
+  doctor: string;
+  status: 'confirmed' | 'pending' | 'rescheduled' | 'cancelled';
+  priority: 'high' | 'medium' | 'low';
+}
 
 const AppointmentsPage = () => {
   const [selectedDate, setSelectedDate] = useState("2024-02-01");
@@ -15,8 +29,9 @@ const AppointmentsPage = () => {
   const [showAppointmentDetails, setShowAppointmentDetails] = useState(false);
   const [selectedAppointmentDetails, setSelectedAppointmentDetails] = useState<any>(null);
   const { t } = useLanguage();
-
-  const appointments = [
+  const { toast } = useToast();
+  const [statusFilter, setStatusFilter] = useState<'all' | 'confirmed' | 'pending' | 'rescheduled' | 'cancelled'>('all');
+  const [appointments, setAppointments] = useState<Appointment[]>([
     {
       id: "APT-001",
       patientName: "Priya Sharma",
@@ -25,8 +40,8 @@ const AppointmentsPage = () => {
       type: "Prenatal Checkup",
       location: "Anganwadi Center, Delhi",
       doctor: "Dr. Sunita Verma",
-      status: "confirmed" as const,
-      priority: "high" as const
+      status: "confirmed",
+      priority: "high"
     },
     {
       id: "APT-002",
@@ -36,8 +51,8 @@ const AppointmentsPage = () => {
       type: "Growth Assessment",
       location: "Community Health Center",
       doctor: "Dr. Rajesh Kumar",
-      status: "confirmed" as const,
-      priority: "medium" as const
+      status: "confirmed",
+      priority: "medium"
     },
     {
       id: "APT-003",
@@ -47,8 +62,8 @@ const AppointmentsPage = () => {
       type: "Postpartum Follow-up",
       location: "Mobile Health Unit",
       doctor: "Dr. Meera Nair",
-      status: "pending" as const,
-      priority: "high" as const
+      status: "pending",
+      priority: "high"
     },
     {
       id: "APT-004",
@@ -58,8 +73,8 @@ const AppointmentsPage = () => {
       type: "Vaccination",
       location: "Primary Health Center",
       doctor: "Nurse Kamala Devi",
-      status: "confirmed" as const,
-      priority: "medium" as const
+      status: "confirmed",
+      priority: "medium"
     },
     {
       id: "APT-005",
@@ -69,8 +84,8 @@ const AppointmentsPage = () => {
       type: "Maternal Health Screening",
       location: "District Hospital",
       doctor: "Dr. Anjali Sharma",
-      status: "rescheduled" as const,
-      priority: "low" as const
+      status: "rescheduled",
+      priority: "low"
     },
     {
       id: "APT-006",
@@ -80,10 +95,10 @@ const AppointmentsPage = () => {
       type: "Nutritional Counseling",
       location: "Community Health Center",
       doctor: "Nutritionist Rekha Jain",
-      status: "confirmed" as const,
-      priority: "medium" as const
+      status: "confirmed",
+      priority: "medium"
     }
-  ];
+  ]);
 
   const upcomingAppointments = [
     {
@@ -125,6 +140,30 @@ const AppointmentsPage = () => {
     }
   };
 
+  const filteredAppointments = appointments.filter((a) => statusFilter === 'all' || a.status === statusFilter);
+
+  const handleCancelAppointment = async () => {
+    if (!selectedAppointmentDetails) return;
+    try {
+      const id = selectedAppointmentDetails.id as string;
+      // Attempt DB update if id looks like a UUID
+      const isUuid = /^[0-9a-fA-F-]{36}$/.test(id);
+      if (isUuid) {
+        const { error } = await supabase
+          .from('appointments')
+          .update({ status: 'cancelled' })
+          .eq('id', id);
+        if (error) throw error;
+      }
+
+      setAppointments((prev) => prev.map((a) => a.id === id ? { ...a, status: 'cancelled' as const } : a));
+      setSelectedAppointmentDetails((prev: any) => prev ? { ...prev, status: 'cancelled' } : prev);
+      toast({ title: 'Appointment cancelled', description: 'The appointment has been cancelled.' });
+    } catch (e: any) {
+      toast({ title: 'Failed to cancel appointment', description: e.message, variant: 'destructive' });
+    }
+  };
+
   return (
     <div className="min-h-screen bg-background">
       <Header />
@@ -155,7 +194,7 @@ const AppointmentsPage = () => {
               onChange={(e) => setSelectedDate(e.target.value)}
               className="px-3 py-2 border rounded-lg bg-background text-foreground w-full sm:w-auto"
             />
-            <div className="flex gap-3 w-full sm:w-auto">
+            <div className="flex gap-3 flex-wrap w-full sm:w-auto">
               <Button
                 variant={viewMode === "day" ? "health" : "outline"}
                 size="sm"
@@ -182,9 +221,18 @@ const AppointmentsPage = () => {
               </Button>
             </div>
           </div>
-          <Button variant="outline" size="sm" className="w-full sm:w-auto">
+          <Button 
+            variant="outline" 
+            size="sm" 
+            className="w-full sm:w-auto"
+            onClick={() => {
+              const order = ['all','confirmed','pending','rescheduled','cancelled'] as const;
+              const next = order[(order.indexOf(statusFilter) + 1) % order.length];
+              setStatusFilter(next as typeof order[number]);
+            }}
+          >
             <Filter className="h-4 w-4 mr-2" />
-            <span>{t('appointments.filterByStatus')}</span>
+            <span>{t('appointments.filterByStatus')} {statusFilter !== 'all' ? `: ${statusFilter}` : ''}</span>
           </Button>
         </div>
 
@@ -200,7 +248,7 @@ const AppointmentsPage = () => {
               })}
             </h3>
             <div className="space-y-4">
-              {appointments.map((appointment) => (
+              {filteredAppointments.map((appointment) => (
                 <Card key={appointment.id} className={`p-4 sm:p-6 hover:shadow-card transition-all duration-300 ${getPriorityColor(appointment.priority)}`}>
                   <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
                     <div className="flex flex-col sm:flex-row sm:items-center gap-4">
@@ -349,7 +397,7 @@ const AppointmentsPage = () => {
                 </div>
                 <div className="flex flex-wrap gap-2 pt-4">
                   <Button variant="health" size="sm" className="flex-1 sm:flex-none">Edit Appointment</Button>
-                  <Button variant="outline" size="sm" className="flex-1 sm:flex-none">Cancel Appointment</Button>
+                  <Button variant="outline" size="sm" className="flex-1 sm:flex-none" onClick={handleCancelAppointment}>Cancel Appointment</Button>
                   <Button variant="ghost" size="sm" onClick={() => setShowAppointmentDetails(false)} className="flex-1 sm:flex-none">Close</Button>
                 </div>
               </div>

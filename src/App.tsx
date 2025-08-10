@@ -15,6 +15,8 @@ import PatientsPage from "./pages/PatientsPage";
 import AppointmentsPage from "./pages/AppointmentsPage";
 import ReportsPage from "./pages/ReportsPage";
 import NotFound from "./pages/NotFound";
+import AdminDashboard from "./pages/AdminDashboard";
+import AdminSeeder from "./pages/AdminSeeder";
 
 const queryClient = new QueryClient();
 
@@ -30,11 +32,13 @@ const App = () => (
             <Route path="/" element={<Index />} />
             <Route path="/auth" element={<AuthPage />} />
             <Route path="/admin-auth" element={<AdminAuthPage />} />
+            <Route path="/admin-dashboard" element={<AdminDashboard />} />
             <Route path="/admin-role-manager" element={<AdminRoleManager />} />
             <Route path="/dashboard" element={<DashboardPage />} />
             <Route path="/patients" element={<PatientsPage />} />
             <Route path="/appointments" element={<AppointmentsPage />} />
             <Route path="/reports" element={<ReportsPage />} />
+            <Route path="/admin-seed" element={<AdminSeeder />} />
             {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
             <Route path="*" element={<NotFound />} />
           </Routes>
